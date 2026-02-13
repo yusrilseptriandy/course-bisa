@@ -1,13 +1,14 @@
 import { Icon } from '@iconify/react';
 import { Inter } from 'next/font/google';
+import Image from 'next/image';
 
 const fonstCustome = Inter();
 
 export default function Home() {
     return (
         <div className="flex min-h-screen w-full justify-center ">
-            <div className="w-full h-min flex">
-                <section className="w-full lg:w-5/12 flex flex-col p-8 lg:pl-20">
+            <div className="w-full h-min flex flex-col md:flex-row">
+                <section className="w-full lg:w-5/12 flex flex-col p-2 lg:pl-20">
                     <div className="w-max bg-zinc-100 dark:bg-slate-900  rounded-full pr-4 py-1 flex items-center ">
                         <Icon
                             icon={'bi:dot'}
@@ -29,21 +30,14 @@ export default function Home() {
                         interaktif. Belajar coding, desain, marketing, dan
                         bisnis langsung dari praktisi industri terkemuka.
                     </p>
-
-                    <div className="relative">
-                        <Icon
-                            icon="mingcute:search-2-line"
-                            className="absolute left-4 top-11.5 h-5 w-5 text-zinc-400"
-                        />
-                        <div className="w-full mt-8 pl-12 pr-4 py-3 bg-zinc-100 dark:bg-zinc-800/50 rounded-full ">
-                            <p className="font-medium text-zinc-400 dark:text-zinc-100">
-                                Cari pembelajaran disini...
-                            </p>
-                        </div>
-                    </div>
                 </section>
-                <section className="w-full lg:w-7/12 dark:bg-zinc-900 items-center justify-center hidden md:block">
-                    <p>Area Kanan (Lebih Luas)</p>
+                <section className="w-full lg:w-7/12 items-center justify-center flex">
+                    <Image
+                        src={'/hero.png'}
+                        width={600}
+                        height={25}
+                        alt="ilustasi"
+                    />
                 </section>
             </div>
         </div>
