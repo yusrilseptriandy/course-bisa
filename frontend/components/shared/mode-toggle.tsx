@@ -25,7 +25,7 @@ export function ModeToggle() {
     return (
         <button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="p-2 rounded-full hover:bg-zinc-100 dark:hover:bg-gray-800"
+            className="p-2 w-min rounded-full hover:bg-zinc-100 dark:hover:bg-gray-800 flex items-center gap-3"
         >
             {theme === 'dark' ? (
                 <Icon icon="mingcute:moon-line" width={25} />

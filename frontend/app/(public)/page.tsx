@@ -7,9 +7,9 @@ const fonstCustome = Inter();
 export default function Home() {
     return (
         <div className="flex min-h-screen w-full justify-center ">
-            <div className="w-full h-min flex flex-col md:flex-row">
-                <section className="w-full lg:w-5/12 flex flex-col p-2 lg:pl-20">
-                    <div className="w-max bg-zinc-100 dark:bg-slate-900  rounded-full pr-4 py-1 flex items-center ">
+            <div className="w-full h-min flex flex-col md:flex-row p-3">
+                <section className="w-full lg:w-5/12 flex flex-col lg:pl-20">
+                    <div className="w-max bg-zinc-100 dark:bg-slate-900  rounded-full pr-4  flex items-center ">
                         <Icon
                             icon={'bi:dot'}
                             className="text-sky-600 animate-pulse text-4xl "

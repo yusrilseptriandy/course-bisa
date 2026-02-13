@@ -10,6 +10,7 @@ import {
 } from 'framer-motion';
 import { ModeToggle } from './mode-toggle';
 import { LoginModal } from '../auth/login-modal';
+import { authClient } from '@/app/libs/auth-client';
 
 const iosSpring: Transition<ValueAnimationTransition> | undefined = {
     type: 'spring',
@@ -20,6 +21,20 @@ const iosSpring: Transition<ValueAnimationTransition> | undefined = {
 export default function Navbar() {
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const { data: session, isPending } = authClient.useSession();
+
+    const handleLogout = async () => {
+        try {
+            setTimeout(async () => {
+                setIsLoading(true);
+                await authClient.signOut();
+            }, 500);
+        } finally {
+            setIsLoading(false);
+        }
+    };
 
     return (
         <>
@@ -62,36 +77,141 @@ export default function Navbar() {
                     <div className="flex items-center gap-2 shrink-0 justify-end">
                         <AnimatePresence mode="popLayout">
                             {isMobileMenuOpen && (
-                                <motion.div
-                                    initial={{ x: 20, opacity: 0, width: 0 }}
-                                    animate={{
-                                        x: 0,
-                                        opacity: 1,
-                                        width: 'auto',
-                                    }}
-                                    exit={{ x: 20, opacity: 0, width: 0 }}
-                                    transition={iosSpring}
-                                    className="flex items-center gap-2 md:hidden overflow-hidden whitespace-nowrap"
-                                >
-                                    <button
-                                        onClick={() => setShowLoginModal(true)}
-                                        className="h-9 px-4 rounded-full bg-zinc-900 text-sm font-medium text-white dark:bg-zinc-50 dark:text-black"
-                                    >
-                                        Masuk
-                                    </button>
-                                    <ModeToggle />
-                                </motion.div>
+                                <AnimatePresence>
+                                    {isMobileMenuOpen && !session && (
+                                        <motion.div
+                                            initial={{
+                                                x: 20,
+                                                opacity: 0,
+                                                width: 0,
+                                            }}
+                                            animate={{
+                                                x: 0,
+                                                opacity: 1,
+                                                width: 'auto',
+                                            }}
+                                            exit={{
+                                                x: 20,
+                                                opacity: 0,
+                                                width: 0,
+                                            }}
+                                            transition={iosSpring}
+                                            className="flex items-center gap-2 md:hidden overflow-hidden whitespace-nowrap"
+                                        >
+                                            <button
+                                                onClick={() =>
+                                                    setShowLoginModal(true)
+                                                }
+                                                className="h-9 px-4 rounded-full bg-zinc-900 text-sm font-medium text-white dark:bg-zinc-50 dark:text-black"
+                                            >
+                                                Masuk
+                                            </button>
+
+                                            <ModeToggle />
+                                        </motion.div>
+                                    )}
+
+                                    {isMobileMenuOpen && session && (
+                                        <motion.div
+                                            initial={{ opacity: 0, y: -10 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            exit={{ opacity: 0, y: -10 }}
+                                            transition={iosSpring}
+                                            className="absolute top-16 right-4 bg-white dark:bg-zinc-900 shadow-xl rounded-2xl p-4 flex flex-col gap-3 md:hidden"
+                                        >
+                                            <motion.div
+                                                initial={{ opacity: 0, y: -10 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -10 }}
+                                                transition={iosSpring}
+                                                className="flex flex-col gap-1"
+                                            >
+                                                <button className="px-3 cursor-pointer w-full py-2 flex items-center gap-3  border-zinc-100 hover:bg-zinc-100 dark:hover:bg-gray-800 rounded-full">
+                                                    <Icon
+                                                        icon={'tabler:user'}
+                                                        width={24}
+                                                    />
+                                                    <p className="text-sm font-semibold">
+                                                        {session.user.name}
+                                                    </p>
+                                                </button>
+                                                {session && !isPending && (
+                                                    <button
+                                                        onClick={handleLogout}
+                                                        className="flex items-center gap-2 rounded-full bg-red-100 p-2 cursor-pointer hover:scale-105 transition-all"
+                                                    >
+                                                        {isLoading ? (
+                                                            <Icon
+                                                                icon={
+                                                                    'mingcute:loading-2-line'
+                                                                }
+                                                                width={23}
+                                                                className="animate-spin text-red-500"
+                                                            />
+                                                        ) : (
+                                                            <Icon
+                                                                icon={
+                                                                    'mingcute:align-arrow-right-line'
+                                                                }
+                                                                className="text-red-500"
+                                                                width={24}
+                                                            />
+                                                        )}
+                                                        <p className="font-semibold text-sm text-red-500 ">
+                                                            Keluar
+                                                        </p>
+                                                    </button>
+                                                )}
+                                            </motion.div>
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
                             )}
                         </AnimatePresence>
 
                         <div className="hidden md:flex items-center gap-2">
-                            <button
-                                onClick={() => setShowLoginModal(true)}
-                                className="h-9 px-5 rounded-full bg-zinc-900 text-sm font-medium text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-200"
-                            >
-                                Masuk
-                            </button>
+                            {!session ? (
+                                <button
+                                    onClick={() => setShowLoginModal(true)}
+                                    className="h-9 px-5 rounded-full bg-zinc-900 text-sm font-medium text-white hover:bg-zinc-800 dark:bg-zinc-50 dark:text-black dark:hover:bg-zinc-200"
+                                >
+                                    Masuk
+                                </button>
+                            ) : (
+                                <button className="w-min p-1 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center gap-2 hover:scale-105 transition-all cursor-pointer">
+                                    <div className="bg-white rounded-full p-1 dark:bg-zinc-500">
+                                        <Icon icon="tabler:user" width={20} />
+                                    </div>
+                                    <p className="text-nowrap font-semibold text-sm text-zinc-700 dark:text-zinc-300 pr-2">
+                                        {session.user.name}
+                                    </p>
+                                </button>
+                            )}
+
                             <ModeToggle />
+                            {session && !isPending && (
+                                <button
+                                    onClick={handleLogout}
+                                    className="flex items-center gap-2 rounded-full bg-red-50 p-2 cursor-pointer hover:scale-105 transition-all"
+                                >
+                                    <p className="font-semibold text-sm text-red-500">
+                                        Keluar
+                                    </p>
+                                    {isLoading ? (
+                                        <Icon
+                                            icon={'mingcute:loading-2-line'}
+                                            width={23}
+                                            className="animate-spin text-red-500"
+                                        />
+                                    ) : (
+                                        <Icon
+                                            icon="mingcute:align-arrow-right-line"
+                                            className="text-red-500"
+                                            width={20}
+                                        />
+                                    )}
+                                </button>
+                            )}
                         </div>
 
                         <button
