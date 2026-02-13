@@ -13,14 +13,14 @@ export default function Navbar() {
                 onClose={() => setShowLoginModal(false)}
             />
             <div
-                className="text-black h-16 border-b 
+                className="text-black py-3 border-b 
                         border-zinc-100 flex
                         justify-between items-center
-                        px-2 dark:border-zinc-800
+                        px-8 dark:border-zinc-800
                         dark:text-white
                         "
             >
-                <Icon icon={'mingcute:cursor-3-fill'} width={34} />
+                <Icon icon={'material-symbols:owl-rounded'} width={34} />
                 <div
                     className="flex items-center 
                         justify-between 

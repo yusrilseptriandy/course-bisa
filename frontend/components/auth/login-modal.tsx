@@ -50,7 +50,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                             <div className="relative px-8 pt-8 pb-4 text-center">
                                 <button
                                     onClick={onClose}
-                                    className="absolute right-6 top-6 p-2 bg-zinc-100 dark:bg-zinc-800 rounded-full hover:bg-zinc-700 transition-colors"
+                                    className="absolute right-6 top-6 p-2 bg-zinc-100 dark:bg-zinc-800 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors"
                                 >
                                     <Icon icon={'proicons:cancel'} width={20} />
                                 </button>
@@ -81,8 +81,8 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                                                 />
                                                 <input
                                                     type="text"
-                                                    placeholder="John Doe"
-                                                    className="w-full pl-12 pr-4 py-3.5 bg-zinc-50 dark:bg-zinc-800/50 rounded-full border-none outline-none focus:ring-2 focus:ring-slate-500/50 transition-all font-medium text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
+                                                    placeholder="Yusril Septriandy. N. Y"
+                                                    className="w-full pl-12 pr-4 py-3 bg-zinc-50 dark:bg-zinc-800/50 rounded-full border-none outline-none focus:ring-2 focus:ring-slate-500/50 transition-all font-medium text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
                                                 />
                                             </div>
                                         </motion.div>
@@ -98,7 +98,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                                         <input
                                             type="email"
                                             placeholder="nama@email.com"
-                                            className="w-full pl-12 pr-4 py-3.5 bg-zinc-50 dark:bg-zinc-800/50 rounded-full border-none outline-none focus:ring-2 focus:ring-slate-500/50 transition-all font-medium text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
+                                            className="w-full pl-12 pr-4 py-3 bg-zinc-50 dark:bg-zinc-800/50 rounded-full border-none outline-none focus:ring-2 focus:ring-slate-500/50 transition-all font-medium text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
                                         />
                                     </div>
                                 </div>
@@ -128,7 +128,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                                         <input
                                             type="password"
                                             placeholder="••••••••"
-                                            className="w-full pl-12 pr-4 py-3.5 bg-zinc-50 dark:bg-zinc-800/50 rounded-full border-none outline-none focus:ring-2 focus:ring-slate-500/50 transition-all font-medium text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
+                                            className="w-full pl-12 pr-4 py-3 bg-zinc-50 dark:bg-zinc-800/50 rounded-full border-none outline-none focus:ring-2 focus:ring-slate-500/50 transition-all font-medium text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
                                         />
                                     </div>
                                     {isRegister && (
@@ -151,7 +151,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                                                 <input
                                                     type="password"
                                                     placeholder="••••••••"
-                                                    className="w-full pl-12 pr-4 py-3.5 bg-zinc-50 dark:bg-zinc-800/50 rounded-full border-none outline-none focus:ring-2 focus:ring-slate-500/50 transition-all font-medium text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
+                                                    className="w-full pl-12 pr-4 py-3 bg-zinc-50 dark:bg-zinc-800/50 rounded-full border-none outline-none focus:ring-2 focus:ring-slate-500/50 transition-all font-medium text-zinc-900 dark:text-zinc-100 placeholder:text-zinc-400"
                                                 />
                                             </div>
                                         </motion.div>
@@ -161,7 +161,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                                 <motion.button
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.95 }}
-                                    className="w-full py-4 bg-black text-white font-bold rounded-full dark:bg-zinc-50 dark:text-black"
+                                    className="w-full py-3 bg-black text-white font-bold rounded-full dark:bg-zinc-50 dark:text-black"
                                 >
                                     {isRegister
                                         ? 'Daftar Sekarang'
@@ -182,7 +182,7 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                                 <motion.button
                                     whileHover={{ scale: 1.02 }}
                                     whileTap={{ scale: 0.98 }}
-                                    className="w-full py-3.5 bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-full font-semibold text-zinc-700 dark:text-zinc-200 flex items-center justify-center gap-2"
+                                    className="w-full py-3 bg-white dark:bg-black border border-zinc-200 dark:border-zinc-800 rounded-full font-semibold text-zinc-700 dark:text-zinc-200 flex items-center justify-center gap-2"
                                 >
                                     <Icon
                                         icon={'material-icon-theme:google'}
