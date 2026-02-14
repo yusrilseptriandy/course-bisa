@@ -1,8 +1,9 @@
+import ImageWithSkeleton from '@/components/shared/image-with-skeleton';
 import { Icon } from '@iconify/react';
-import { Inter } from 'next/font/google';
-import Image from 'next/image';
+import {Inter, Manrope } from 'next/font/google';
 
 const fonstCustome = Inter();
+const SG = Manrope()
 
 export default function Home() {
     return (
@@ -25,18 +26,30 @@ export default function Home() {
                         Kuasai Ilmu <br />{' '}
                         <span className="text-sky-600">Tanpa Batas.</span>
                     </h1>
-                    <p className="mt-4 font-semibold text-sm text-zinc-700 dark:text-zinc-300">
-                        Tingkatkan karir Anda dengan ribuan kelas online
-                        interaktif. Belajar coding, desain, marketing, dan
-                        bisnis langsung dari praktisi industri terkemuka.
-                    </p>
+                   <div className={`${SG.className} flex flex-col gap-1 p-3 items-start font-extrabold`}>
+                    <div className='flex items-center gap-2'>
+                        <div className=' bg-green-600 rounded-full'>
+                        <Icon icon={"proicons:checkmark"} className='text-white'/>
+                      </div>
+                        <p className=' text-zinc-800 dark:text-white'>Sertifikat Resmi</p>
+                    </div>
+
+                   <div className='flex items-center gap-2'>
+                      <div className=' bg-green-600 rounded-full'>
+                        <Icon icon={"proicons:checkmark"} className='text-white'/>
+                    </div>
+                    <p className=' text-zinc-800 dark:text-white'>Akses Seumur Hidup</p>
+                   </div>
+                   </div>
                 </section>
                 <section className="w-full lg:w-7/12 items-center justify-center flex">
-                    <Image
-                        src={'/hero.png'}
+                    <ImageWithSkeleton
+                        src="/hero.png"
                         width={600}
-                        height={25}
-                        alt="ilustasi"
+                        height={400}
+                        alt="Ilustrasi halaman utama aplikasi"
+                        wrapperClassName="rounded-xl"
+                        className="rounded-xl shadow-lg"
                     />
                 </section>
             </div>

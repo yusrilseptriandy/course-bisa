@@ -1,0 +1,18 @@
+**/node_modules/
+
+# Mengabaikan folder git dan konfigurasinya
+.git
+**/gitignore
+
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+*.log
+npm-debug.log*
+README.md
+
+**/dist/
+**/.next/
+**/out/
+backend/main 

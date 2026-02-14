@@ -1,7 +1,7 @@
 'use client';
 
 import { Icon } from '@iconify/react';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
     motion,
     AnimatePresence,
@@ -11,6 +11,8 @@ import {
 import { ModeToggle } from './mode-toggle';
 import { LoginModal } from '../auth/login-modal';
 import { authClient } from '@/app/libs/auth-client';
+import Link from 'next/link';
+import { Manrope } from 'next/font/google';
 
 const iosSpring: Transition<ValueAnimationTransition> | undefined = {
     type: 'spring',
@@ -18,23 +20,53 @@ const iosSpring: Transition<ValueAnimationTransition> | undefined = {
     damping: 30,
 };
 
+const MENU_ITEMS = [
+    { label: 'Dashboard', icon: 'tabler:layout-dashboard', href: '/dashboard' },
+    { label: 'Profile Saya', icon: 'tabler:user-circle', href: '/profile' },
+    { label: 'Kelas Saya', icon: 'tabler:book-2', href: '/kelas' },
+    { label: 'Sertifikat', icon: 'tabler:certificate', href: '/sertifikat' },
+    { label: 'Favorit', icon: 'tabler:heart', href: '/favorit' },
+];
+
+const SG = Manrope()
+
 export default function Navbar() {
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isDesktopMenuOpen, setIsDesktopMenuOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    const desktopMenuRef = useRef<HTMLDivElement>(null);
 
     const { data: session, isPending } = authClient.useSession();
 
     const handleLogout = async () => {
         try {
+            setIsLoading(true);
             setTimeout(async () => {
-                setIsLoading(true);
                 await authClient.signOut();
+                setIsMobileMenuOpen(false);
+                setIsDesktopMenuOpen(false);
             }, 500);
         } finally {
             setIsLoading(false);
         }
     };
+
+    useEffect(() => {
+        function handleClickOutside(event: MouseEvent) {
+            if (
+                desktopMenuRef.current &&
+                !desktopMenuRef.current.contains(event.target as Node)
+            ) {
+                setIsDesktopMenuOpen(false);
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <>
@@ -54,13 +86,13 @@ export default function Navbar() {
                     </div>
 
                     <motion.div
-                        className="flex-1 flex justify-center md:justify-start  origin-left"
+                        className="flex-1 flex justify-center md:justify-start origin-left"
                         initial={false}
                         animate={{
                             width: isMobileMenuOpen ? 0 : 'auto',
+                            opacity: isMobileMenuOpen ? 0 : 1,
                         }}
                         transition={iosSpring}
-                        style={{ display: 'flex' }}
                     >
                         <div className="relative w-full max-w-md md:w-full! md:opacity-100! md:block!">
                             <Icon
@@ -75,101 +107,35 @@ export default function Navbar() {
                     </motion.div>
 
                     <div className="flex items-center gap-2 shrink-0 justify-end">
-                        <AnimatePresence mode="popLayout">
-                            {isMobileMenuOpen && (
-                                <AnimatePresence>
-                                    {isMobileMenuOpen && !session && (
-                                        <motion.div
-                                            initial={{
-                                                x: 20,
-                                                opacity: 0,
-                                                width: 0,
-                                            }}
-                                            animate={{
-                                                x: 0,
-                                                opacity: 1,
-                                                width: 'auto',
-                                            }}
-                                            exit={{
-                                                x: 20,
-                                                opacity: 0,
-                                                width: 0,
-                                            }}
-                                            transition={iosSpring}
-                                            className="flex items-center gap-2 md:hidden overflow-hidden whitespace-nowrap"
-                                        >
-                                            <button
-                                                onClick={() =>
-                                                    setShowLoginModal(true)
-                                                }
-                                                className="h-9 px-4 rounded-full bg-zinc-900 text-sm font-medium text-white dark:bg-zinc-50 dark:text-black"
-                                            >
-                                                Masuk
-                                            </button>
-
-                                            <ModeToggle />
-                                        </motion.div>
-                                    )}
-
-                                    {isMobileMenuOpen && session && (
-                                        <motion.div
-                                            initial={{ opacity: 0, y: -10 }}
-                                            animate={{ opacity: 1, y: 0 }}
-                                            exit={{ opacity: 0, y: -10 }}
-                                            transition={iosSpring}
-                                            className="absolute top-16 right-4 bg-white dark:bg-zinc-900 shadow-xl rounded-2xl p-4 flex flex-col gap-3 md:hidden"
-                                        >
-                                            <motion.div
-                                                initial={{ opacity: 0, y: -10 }}
-                                                animate={{ opacity: 1, y: 0 }}
-                                                exit={{ opacity: 0, y: -10 }}
-                                                transition={iosSpring}
-                                                className="flex flex-col gap-1"
-                                            >
-                                                <button className="px-3 cursor-pointer w-full py-2 flex items-center gap-3  border-zinc-100 hover:bg-zinc-100 dark:hover:bg-gray-800 rounded-full">
-                                                    <Icon
-                                                        icon={'tabler:user'}
-                                                        width={24}
-                                                    />
-                                                    <p className="text-sm font-semibold">
-                                                        {session.user.name}
-                                                    </p>
-                                                </button>
-                                                {session && !isPending && (
-                                                    <button
-                                                        onClick={handleLogout}
-                                                        className="flex items-center gap-2 rounded-full bg-red-100 p-2 cursor-pointer hover:scale-105 transition-all"
-                                                    >
-                                                        {isLoading ? (
-                                                            <Icon
-                                                                icon={
-                                                                    'mingcute:loading-2-line'
-                                                                }
-                                                                width={23}
-                                                                className="animate-spin text-red-500"
-                                                            />
-                                                        ) : (
-                                                            <Icon
-                                                                icon={
-                                                                    'mingcute:align-arrow-right-line'
-                                                                }
-                                                                className="text-red-500"
-                                                                width={24}
-                                                            />
-                                                        )}
-                                                        <p className="font-semibold text-sm text-red-500 ">
-                                                            Keluar
-                                                        </p>
-                                                    </button>
-                                                )}
-                                            </motion.div>
-                                        </motion.div>
-                                    )}
-                                </AnimatePresence>
+                        <AnimatePresence>
+                            {isMobileMenuOpen && !session && (
+                                <motion.div
+                                    initial={{ x: 20, opacity: 0, width: 0 }}
+                                    animate={{
+                                        x: 0,
+                                        opacity: 1,
+                                        width: 'auto',
+                                    }}
+                                    exit={{ x: 20, opacity: 0, width: 0 }}
+                                    transition={iosSpring}
+                                    className="flex items-center gap-2 md:hidden overflow-hidden whitespace-nowrap"
+                                >
+                                    <button
+                                        onClick={() => setShowLoginModal(true)}
+                                        className="h-9 px-4 rounded-full bg-zinc-900 text-sm font-medium text-white dark:bg-zinc-50 dark:text-black"
+                                    >
+                                        Masuk
+                                    </button>
+                                    <ModeToggle />
+                                </motion.div>
                             )}
                         </AnimatePresence>
 
-                        <div className="hidden md:flex items-center gap-2">
+                        {/* DESKTOP SECTION */}
+                        <div
+                            className="hidden md:flex items-center gap-2 relative"
+                            ref={desktopMenuRef}
+                        >
                             {!session ? (
                                 <button
                                     onClick={() => setShowLoginModal(true)}
@@ -178,47 +144,133 @@ export default function Navbar() {
                                     Masuk
                                 </button>
                             ) : (
-                                <button className="w-min p-1 rounded-full bg-zinc-200 dark:bg-zinc-700 flex items-center justify-center gap-2 hover:scale-105 transition-all cursor-pointer">
-                                    <div className="bg-white rounded-full p-1 dark:bg-zinc-500">
-                                        <Icon icon="tabler:user" width={20} />
-                                    </div>
-                                    <p className="text-nowrap font-semibold text-sm text-zinc-700 dark:text-zinc-300 pr-2">
-                                        {session.user.name}
-                                    </p>
-                                </button>
-                            )}
+                                <>
+                                    {/* TRIGGER BUTTON DESKTOP */}
+                                    <button
+                                        onClick={() =>
+                                            setIsDesktopMenuOpen(
+                                                !isDesktopMenuOpen,
+                                            )
+                                        }
+                                        className="w-min p-1 pr-3 rounded-full bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 flex items-center justify-center gap-2 hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-all cursor-pointer"
+                                    >
+                                        <div className="bg-white dark:bg-zinc-600 rounded-full p-1 shadow-sm">
+                                            <Icon
+                                                icon="tabler:user"
+                                                width={18}
+                                                className="text-zinc-700 dark:text-zinc-200"
+                                            />
+                                        </div>
+                                        <p className="text-nowrap font-semibold text-sm text-zinc-700 dark:text-zinc-200 max-25 truncate">
+                                            {session.user.name}
+                                        </p>
+                                        <Icon
+                                            icon="tabler:chevron-down"
+                                            width={16}
+                                            className={`text-zinc-400 transition-transform duration-200 ${isDesktopMenuOpen ? 'rotate-180' : ''}`}
+                                        />
+                                    </button>
 
-                            <ModeToggle />
-                            {session && !isPending && (
-                                <button
-                                    onClick={handleLogout}
-                                    className="flex items-center gap-2 rounded-full bg-red-50 p-2 cursor-pointer hover:scale-105 transition-all"
-                                >
-                                    <p className="font-semibold text-sm text-red-500">
-                                        Keluar
-                                    </p>
-                                    {isLoading ? (
-                                        <Icon
-                                            icon={'mingcute:loading-2-line'}
-                                            width={23}
-                                            className="animate-spin text-red-500"
-                                        />
-                                    ) : (
-                                        <Icon
-                                            icon="mingcute:align-arrow-right-line"
-                                            className="text-red-500"
-                                            width={20}
-                                        />
-                                    )}
-                                </button>
+                                    {/* DROPDOWN MENU DESKTOP */}
+                                    <AnimatePresence>
+                                        {isDesktopMenuOpen && (
+                                            <motion.div
+                                                initial={{
+                                                    opacity: 0,
+                                                    y: 10,
+                                                    scale: 0.95,
+                                                }}
+                                                animate={{
+                                                    opacity: 1,
+                                                    y: 0,
+                                                    scale: 1,
+                                                }}
+                                                exit={{
+                                                    opacity: 0,
+                                                    y: 10,
+                                                    scale: 0.95,
+                                                }}
+                                                transition={{
+                                                    duration: 0.15,
+                                                    ease: 'easeOut',
+                                                }}
+                                                className={`absolute top-12 right-0 w-64 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-zinc-100 dark:border-zinc-800 p-2 overflow-hidden z-100 ${SG.className}`}
+                                            >
+                                                {/* Header Dropdown */}
+                                                <div className="px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 mb-1">
+                                                    <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                                                        Masuk sebagai
+                                                    </p>
+                                                    <p className="font-bold text-zinc-900 dark:text-white truncate">
+                                                        {session.user.name}
+                                                    </p>
+                                                    <p className="text-xs text-zinc-500 truncate">
+                                                        {session.user.email}
+                                                    </p>
+                                                </div>
+
+                                                {/* Menu List Desktop */}
+                                                <div className="flex flex-col gap-1 py-1">
+                                                    {MENU_ITEMS.map(
+                                                        (item, index) => (
+                                                            <Link
+                                                                key={index}
+                                                                href={item.href}
+                                                                onClick={() =>
+                                                                    setIsDesktopMenuOpen(
+                                                                        false,
+                                                                    )
+                                                                }
+                                                                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-sm font-medium text-zinc-700 dark:text-zinc-200 transition-colors"
+                                                            >
+                                                                <Icon
+                                                                    icon={
+                                                                        item.icon
+                                                                    }
+                                                                    width={18}
+                                                                    className="text-zinc-500 dark:text-zinc-400"
+                                                                />
+                                                                {item.label}
+                                                            </Link>
+                                                        ),
+                                                    )}
+                                                </div>
+
+                                                <div className="h-px bg-zinc-100 dark:bg-zinc-800 my-1" />
+
+                                                <button
+                                                    onClick={handleLogout}
+                                                    disabled={isLoading}
+                                                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10 text-sm font-medium text-red-600 dark:text-red-400 transition-colors"
+                                                >
+                                                    {isLoading ? (
+                                                        <Icon
+                                                            icon="mingcute:loading-2-line"
+                                                            width={18}
+                                                            className="animate-spin"
+                                                        />
+                                                    ) : (
+                                                        <Icon
+                                                            icon="mingcute:align-arrow-right-line"
+                                                            width={18}
+                                                        />
+                                                    )}
+                                                    Keluar
+                                                </button>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </>
                             )}
+                            <ModeToggle />
                         </div>
 
+                        {/* Hamburger Button Mobile */}
                         <button
                             onClick={() =>
                                 setIsMobileMenuOpen(!isMobileMenuOpen)
                             }
-                            className="flex h-9 w-9 items-center justify-center rounded-full text-zinc-900 bg-zinc-100 dark:text-zinc-100 dark:bg-zinc-800 md:hidden"
+                            className="flex h-9 w-9 items-center justify-center rounded-full text-zinc-900 bg-zinc-100 dark:text-zinc-100 dark:bg-zinc-800 md:hidden z-50 relative"
                         >
                             <Icon
                                 icon={
@@ -233,6 +285,127 @@ export default function Navbar() {
                     </div>
                 </div>
             </nav>
+
+            {/* --- BOTTOM SHEET AREA (MOBILE ONLY) --- */}
+            <AnimatePresence>
+                {isMobileMenuOpen && session && (
+                    <>
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setIsMobileMenuOpen(false)}
+                            className="fixed inset-0 z-60 bg-black/40 backdrop-blur-[2px] md:hidden"
+                        />
+
+                        <motion.div
+                            initial={{ y: '100%' }}
+                            animate={{ y: 0 }}
+                            exit={{ y: '100%' }}
+                            transition={{
+                                type: 'spring',
+                                damping: 25,
+                                stiffness: 300,
+                                mass: 0.8,
+                            }}
+                            drag="y"
+                            dragConstraints={{ top: 0 }}
+                            dragElastic={0.05}
+                            onDragEnd={(_, info) => {
+                                if (
+                                    info.offset.y > 100 ||
+                                    info.velocity.y > 500
+                                )
+                                    setIsMobileMenuOpen(false);
+                            }}
+                            className={`fixed bottom-0 left-0 right-0 z-70 flex flex-col rounded-t-4xl bg-white p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:bg-zinc-900 md:hidden max-h-[85vh] overflow-y-auto ${SG.className}`}
+                        >
+                            <div className="absolute left-1/2 top-4 h-1.5 w-12 -translate-x-1/2 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+
+                            <div className="mt-6 flex flex-col gap-6">
+                                <div className="flex items-center gap-4 justify-between">
+                                    <div className="flex gap-4 items-center">
+                                        <div className="h-12 w-12 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center shrink-0">
+                                            <Icon
+                                                icon="tabler:user"
+                                                width={24}
+                                                className="text-zinc-500"
+                                            />
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
+                                                Halo,
+                                            </span>
+                                            <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100 line-clamp-1">
+                                                {session.user.name}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <ModeToggle />
+                                </div>
+
+                                <div className="h-px w-full bg-zinc-100 dark:bg-zinc-800" />
+
+                                <div className="flex flex-col gap-2">
+                                    {MENU_ITEMS.map((item, index) => (
+                                        <Link
+                                            key={index}
+                                            href={item.href}
+                                            onClick={() =>
+                                                setIsMobileMenuOpen(false)
+                                            }
+                                            className="flex items-center justify-between p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/40 hover:bg-zinc-100 dark:hover:bg-zinc-800 active:scale-[0.98] transition-all"
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <Icon
+                                                    icon={item.icon}
+                                                    width={22}
+                                                    className="text-zinc-600 dark:text-zinc-400"
+                                                />
+                                                <span className="font-medium text-zinc-700 dark:text-zinc-200">
+                                                    {item.label}
+                                                </span>
+                                            </div>
+                                            <Icon
+                                                icon="tabler:chevron-right"
+                                                width={18}
+                                                className="text-zinc-400"
+                                            />
+                                        </Link>
+                                    ))}
+                                </div>
+
+                                <div className="h-px w-full bg-zinc-100 dark:bg-zinc-800" />
+
+                                {!isPending && (
+                                    <button
+                                        onClick={handleLogout}
+                                        className="group flex w-full items-center justify-between rounded-2xl bg-red-50 p-5 active:scale-[0.98] transition-all dark:bg-red-500/10"
+                                    >
+                                        <span className="font-semibold text-red-600 dark:text-red-400">
+                                            Keluar Akun
+                                        </span>
+                                        {isLoading ? (
+                                            <Icon
+                                                icon="mingcute:loading-2-line"
+                                                width={22}
+                                                className="animate-spin text-red-600 dark:text-red-400"
+                                            />
+                                        ) : (
+                                            <Icon
+                                                icon="mingcute:align-arrow-right-line"
+                                                width={22}
+                                                className="text-red-600 dark:text-red-400 transition-transform group-active:translate-x-1"
+                                            />
+                                        )}
+                                    </button>
+                                )}
+                            </div>
+                            <div className="h-6 w-full shrink-0" />
+                        </motion.div>
+                    </>
+                )}
+            </AnimatePresence>
         </>
     );
 }
