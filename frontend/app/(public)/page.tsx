@@ -1,14 +1,15 @@
+import CardCourse from '@/components/shared/card-course';
 import ImageWithSkeleton from '@/components/shared/image-with-skeleton';
 import { Icon } from '@iconify/react';
-import {Inter, Manrope } from 'next/font/google';
+import { Inter, Manrope } from 'next/font/google';
 
 const fonstCustome = Inter();
-const SG = Manrope()
+const SG = Manrope();
 
 export default function Home() {
     return (
-        <div className="flex min-h-screen w-full justify-center ">
-            <div className="w-full h-min flex flex-col md:flex-row p-3">
+        <div className="flex flex-col min-h-screen w-full ">
+            <div className="w-full h-min flex flex-col md:flex-row mt-3 px-3 md:px-0">
                 <section className="w-full lg:w-5/12 flex flex-col lg:pl-20">
                     <div className="w-max bg-zinc-100 dark:bg-slate-900  rounded-full pr-4  flex items-center ">
                         <Icon
@@ -24,23 +25,37 @@ export default function Home() {
 
                     <h1 className=" mt-6 text-5xl font-extrabold  text-zinc-900 dark:text-white text-nowrap">
                         Kuasai Ilmu <br />{' '}
-                        <span className="text-sky-600">Tanpa Batas.</span>
+                        <span className="text-zinc-900 dark:text-white">
+                            Tanpa Batas.
+                        </span>
                     </h1>
-                   <div className={`${SG.className} flex flex-col gap-1 p-3 items-start font-extrabold`}>
-                    <div className='flex items-center gap-2'>
-                        <div className=' bg-green-600 rounded-full'>
-                        <Icon icon={"proicons:checkmark"} className='text-white'/>
-                      </div>
-                        <p className=' text-zinc-800 dark:text-white'>Sertifikat Resmi</p>
-                    </div>
+                    <div
+                        className={`${SG.className} flex flex-col gap-1 p-3 items-start font-extrabold`}
+                    >
+                        <div className="flex items-center gap-2">
+                            <div className=" bg-green-600 rounded-full">
+                                <Icon
+                                    icon={'proicons:checkmark'}
+                                    className="text-white"
+                                />
+                            </div>
+                            <p className=" text-zinc-800 dark:text-white">
+                                Sertifikat Resmi
+                            </p>
+                        </div>
 
-                   <div className='flex items-center gap-2'>
-                      <div className=' bg-green-600 rounded-full'>
-                        <Icon icon={"proicons:checkmark"} className='text-white'/>
+                        <div className="flex items-center gap-2">
+                            <div className=" bg-green-600 rounded-full">
+                                <Icon
+                                    icon={'proicons:checkmark'}
+                                    className="text-white"
+                                />
+                            </div>
+                            <p className=" text-zinc-800 dark:text-white">
+                                Akses Seumur Hidup
+                            </p>
+                        </div>
                     </div>
-                    <p className=' text-zinc-800 dark:text-white'>Akses Seumur Hidup</p>
-                   </div>
-                   </div>
                 </section>
                 <section className="w-full lg:w-7/12 items-center justify-center flex">
                     <ImageWithSkeleton
@@ -53,6 +68,9 @@ export default function Home() {
                     />
                 </section>
             </div>
+
+            {/* Card course */}
+            <CardCourse />
         </div>
     );
 }

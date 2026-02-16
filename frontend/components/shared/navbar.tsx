@@ -13,6 +13,8 @@ import { LoginModal } from '../auth/login-modal';
 import { authClient } from '@/app/libs/auth-client';
 import Link from 'next/link';
 import { Manrope } from 'next/font/google';
+import { LogoutModal } from './logout-modal';
+import { useRouter } from 'next/navigation';
 
 const iosSpring: Transition<ValueAnimationTransition> | undefined = {
     type: 'spring',
@@ -21,37 +23,36 @@ const iosSpring: Transition<ValueAnimationTransition> | undefined = {
 };
 
 const MENU_ITEMS = [
-    { label: 'Dashboard', icon: 'tabler:layout-dashboard', href: '/dashboard' },
+    {
+        label: 'Dashboard',
+        icon: 'tabler:layout-dashboard',
+        href: '/teacher/dashboard/course',
+    },
     { label: 'Profile Saya', icon: 'tabler:user-circle', href: '/profile' },
     { label: 'Kelas Saya', icon: 'tabler:book-2', href: '/kelas' },
     { label: 'Sertifikat', icon: 'tabler:certificate', href: '/sertifikat' },
     { label: 'Favorit', icon: 'tabler:heart', href: '/favorit' },
 ];
 
-const SG = Manrope()
+const SG = Manrope();
 
 export default function Navbar() {
+    const router = useRouter();
     const [showLoginModal, setShowLoginModal] = useState(false);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isDesktopMenuOpen, setIsDesktopMenuOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
 
     const desktopMenuRef = useRef<HTMLDivElement>(null);
-
     const { data: session, isPending } = authClient.useSession();
 
-    const handleLogout = async () => {
-        try {
-            setIsLoading(true);
-            setTimeout(async () => {
-                await authClient.signOut();
-                setIsMobileMenuOpen(false);
-                setIsDesktopMenuOpen(false);
-            }, 500);
-        } finally {
-            setIsLoading(false);
+    const filteredMenuItems = MENU_ITEMS.filter((item) => {
+        if (item.label === 'Dashboard') {
+            return session?.user.role === 'teacher';
         }
-    };
+        return true;
+    });
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
@@ -67,12 +68,50 @@ export default function Navbar() {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
+    //     try {
+    //         setIsLoading(true);
+    //         setTimeout(async () => {
+    //             await authClient.signOut();
+    //             setIsMobileMenuOpen(false);
+    //             setIsDesktopMenuOpen(false);
+    //         }, 500);
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
 
+    const openLogoutModal = () => {
+        setIsMobileMenuOpen(false);
+        setIsDesktopMenuOpen(false);
+        setShowLogoutModal(true);
+    };
+    const handleConfirmLogout = async () => {
+        try {
+            setIsLoading(true);
+            await authClient.signOut();
+            setShowLogoutModal(false);
+
+            setTimeout(() => {
+                router.push('/');
+            }, 100);
+        } catch (err) {
+            console.error(err);
+        } finally {
+            setIsLoading(false);
+        }
+    };
     return (
         <>
             <LoginModal
                 isOpen={showLoginModal}
                 onClose={() => setShowLoginModal(false)}
+            />
+
+            <LogoutModal
+                isOpen={showLogoutModal}
+                onClose={() => setShowLogoutModal(false)}
+                onConfirm={handleConfirmLogout}
+                isLoading={isLoading}
             />
 
             <nav className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white/70 backdrop-blur-md dark:bg-black/80 dark:border-zinc-800">
@@ -198,9 +237,17 @@ export default function Navbar() {
                                             >
                                                 {/* Header Dropdown */}
                                                 <div className="px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 mb-1">
-                                                    <p className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                                                        Masuk sebagai
-                                                    </p>
+                                                    <div className="text-xs font-medium text-zinc-500 dark:text-zinc-400 flex items-center">
+                                                        Masuk sebagai{' '}
+                                                        {session && (
+                                                            <p className="w-max rounded-full text-green-500 ml-1">
+                                                                {
+                                                                    session.user
+                                                                        .role
+                                                                }
+                                                            </p>
+                                                        )}
+                                                    </div>
                                                     <p className="font-bold text-zinc-900 dark:text-white truncate">
                                                         {session.user.name}
                                                     </p>
@@ -211,7 +258,7 @@ export default function Navbar() {
 
                                                 {/* Menu List Desktop */}
                                                 <div className="flex flex-col gap-1 py-1">
-                                                    {MENU_ITEMS.map(
+                                                    {filteredMenuItems.map(
                                                         (item, index) => (
                                                             <Link
                                                                 key={index}
@@ -239,22 +286,15 @@ export default function Navbar() {
                                                 <div className="h-px bg-zinc-100 dark:bg-zinc-800 my-1" />
 
                                                 <button
-                                                    onClick={handleLogout}
-                                                    disabled={isLoading}
+                                                    onClick={openLogoutModal}
                                                     className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10 text-sm font-medium text-red-600 dark:text-red-400 transition-colors"
                                                 >
-                                                    {isLoading ? (
-                                                        <Icon
-                                                            icon="mingcute:loading-2-line"
-                                                            width={18}
-                                                            className="animate-spin"
-                                                        />
-                                                    ) : (
+                                                  
                                                         <Icon
                                                             icon="mingcute:align-arrow-right-line"
                                                             width={18}
                                                         />
-                                                    )}
+                                                    
                                                     Keluar
                                                 </button>
                                             </motion.div>
@@ -333,9 +373,16 @@ export default function Navbar() {
                                             />
                                         </div>
                                         <div className="flex flex-col">
-                                            <span className="text-xs font-medium text-zinc-500 dark:text-zinc-400">
-                                                Halo,
-                                            </span>
+                                            <div className="flex text-xs items-center">
+                                                <span className=" font-medium text-zinc-500 dark:text-zinc-400">
+                                                    Halo,
+                                                </span>
+                                                {session && (
+                                                    <p className="w-max rounded-full text-green-500 ml-1">
+                                                        {session.user.role}
+                                                    </p>
+                                                )}
+                                            </div>
                                             <p className="text-lg font-bold text-zinc-900 dark:text-zinc-100 line-clamp-1">
                                                 {session.user.name}
                                             </p>
@@ -347,7 +394,7 @@ export default function Navbar() {
                                 <div className="h-px w-full bg-zinc-100 dark:bg-zinc-800" />
 
                                 <div className="flex flex-col gap-2">
-                                    {MENU_ITEMS.map((item, index) => (
+                                    {filteredMenuItems.map((item, index) => (
                                         <Link
                                             key={index}
                                             href={item.href}
@@ -379,7 +426,7 @@ export default function Navbar() {
 
                                 {!isPending && (
                                     <button
-                                        onClick={handleLogout}
+                                        onClick={openLogoutModal}
                                         className="group flex w-full items-center justify-between rounded-2xl bg-red-50 p-5 active:scale-[0.98] transition-all dark:bg-red-500/10"
                                     >
                                         <span className="font-semibold text-red-600 dark:text-red-400">

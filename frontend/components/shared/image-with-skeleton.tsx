@@ -36,7 +36,7 @@ export default function ImageWithSkeleton({
                 className={`${className ?? ''} ${
                     isLoading ? 'opacity-0' : 'opacity-100'
                 } transition-opacity duration-300`}
-                onLoadingComplete={() => setIsLoading(false)}
+                onLoad={() => setIsLoading(false)}
             />
         </div>
     );
