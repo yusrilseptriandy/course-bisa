@@ -9,7 +9,7 @@ export default function CardCourse() {
             {courses.map((item, index) => (
                 <div
                     key={index}
-                    className="dark:bg-[#111] border dark:border-0 border-slate-100 rounded-2xl overflow-hidden p-3 flex flex-col gap-3 "
+                    className="dark:bg-[#111] border dark:border-0 border-zinc-200 rounded-2xl overflow-hidden p-3 flex flex-col gap-3 "
                 >
                     <div className="relative w-full aspect-video rounded-xl overflow-hidden">
                         <Image
@@ -25,8 +25,13 @@ export default function CardCourse() {
                     <div className="space-y-2">
                         <div className="flex items-center gap-1">
                             <Icon
-                                icon={'proicons:thumbs-up'}
+                                icon={'lucide:play'}
                                 className="text-xs"
+                            />
+                            <span className="text-[10px] font-bold ">100k</span>
+                            <Icon
+                                icon={'proicons:thumbs-up'}
+                                className="text-xs ml-1"
                             />
                             <span className="text-[10px] font-bold ">12k</span>
 
@@ -55,7 +60,7 @@ export default function CardCourse() {
                         </div>
                     </div>
 
-                    <hr className="dark:border-zinc-800 border-zinc-100" />
+                    <hr className="dark:border-zinc-800 border-zinc-200" />
 
                     {/* FOOTER */}
                     <div className="flex items-center justify-between">

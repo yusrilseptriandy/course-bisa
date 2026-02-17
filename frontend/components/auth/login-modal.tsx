@@ -177,7 +177,8 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                                 className="px-8 pb-8 space-y-4"
                             >
                                 {globalError && (
-                                    <div className="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm font-medium text-center">
+                                    <div className="p-3 text-red-600 dark:text-red-400 text-sm font-medium text-center flex items-center justify-center gap-1">
+                                        <Icon icon={"ic:round-error"} width={18}/>
                                         {globalError}
                                     </div>
                                 )}

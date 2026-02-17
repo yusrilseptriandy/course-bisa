@@ -25,13 +25,13 @@ const iosSpring: Transition<ValueAnimationTransition> | undefined = {
 const MENU_ITEMS = [
     {
         label: 'Dashboard',
-        icon: 'tabler:layout-dashboard',
+        icon: 'streamline-plump-color:code-monitor-2-flat',
         href: '/teacher/dashboard/course',
     },
-    { label: 'Profile Saya', icon: 'tabler:user-circle', href: '/profile' },
-    { label: 'Kelas Saya', icon: 'tabler:book-2', href: '/kelas' },
-    { label: 'Sertifikat', icon: 'tabler:certificate', href: '/sertifikat' },
-    { label: 'Favorit', icon: 'tabler:heart', href: '/favorit' },
+    { label: 'Profile Saya', icon: 'fluent-color:person-48', href: '/profile' },
+    { label: 'Kelas Saya', icon: 'fluent-color:book-open-lightbulb-20', href: '/kelas' },
+    { label: 'Sertifikat', icon: 'fluent-color:certificate-16', href: '/sertifikat' },
+    { label: 'Keranjang', icon: 'streamline-plump-color:shopping-basket-1-flat', href: '/cart' },
 ];
 
 const SG = Manrope();
@@ -233,7 +233,7 @@ export default function Navbar() {
                                                     duration: 0.15,
                                                     ease: 'easeOut',
                                                 }}
-                                                className={`absolute top-12 right-0 w-64 bg-white dark:bg-zinc-900 rounded-2xl shadow-xl border border-zinc-100 dark:border-zinc-800 p-2 overflow-hidden z-100 ${SG.className}`}
+                                                className={`absolute top-12 right-0 w-64 bg-white dark:bg-zinc-900 rounded-3xl shadow-xl border border-zinc-100 dark:border-zinc-800 p-2 overflow-hidden z-100 ${SG.className}`}
                                             >
                                                 {/* Header Dropdown */}
                                                 <div className="px-4 py-3 border-b border-zinc-100 dark:border-zinc-800 mb-1">
@@ -268,14 +268,13 @@ export default function Navbar() {
                                                                         false,
                                                                     )
                                                                 }
-                                                                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-800 text-sm font-medium text-zinc-700 dark:text-zinc-200 transition-colors"
+                                                                className="flex items-center gap-3 px-3 py-2 rounded-full hover:bg-zinc-100 dark:hover:bg-zinc-800 text-sm font-medium dark:text-zinc-200 transition-colors"
                                                             >
                                                                 <Icon
                                                                     icon={
                                                                         item.icon
                                                                     }
                                                                     width={18}
-                                                                    className="text-zinc-500 dark:text-zinc-400"
                                                                 />
                                                                 {item.label}
                                                             </Link>
@@ -287,7 +286,7 @@ export default function Navbar() {
 
                                                 <button
                                                     onClick={openLogoutModal}
-                                                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10 text-sm font-medium text-red-600 dark:text-red-400 transition-colors"
+                                                    className="w-full flex items-center gap-3 px-3 py-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/10 text-sm font-medium text-red-600 dark:text-red-400 transition-colors"
                                                 >
                                                   
                                                         <Icon
@@ -401,7 +400,7 @@ export default function Navbar() {
                                             onClick={() =>
                                                 setIsMobileMenuOpen(false)
                                             }
-                                            className="flex items-center justify-between p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-800/40 hover:bg-zinc-100 dark:hover:bg-zinc-800 active:scale-[0.98] transition-all"
+                                            className="flex items-center justify-between p-4 rounded-full bg-zinc-50 dark:bg-zinc-800/40 hover:bg-zinc-100 dark:hover:bg-zinc-800 active:scale-[0.98] transition-all"
                                         >
                                             <div className="flex items-center gap-3">
                                                 <Icon
@@ -409,7 +408,7 @@ export default function Navbar() {
                                                     width={22}
                                                     className="text-zinc-600 dark:text-zinc-400"
                                                 />
-                                                <span className="font-medium text-zinc-700 dark:text-zinc-200">
+                                                <span className="font-medium ">
                                                     {item.label}
                                                 </span>
                                             </div>
@@ -427,7 +426,7 @@ export default function Navbar() {
                                 {!isPending && (
                                     <button
                                         onClick={openLogoutModal}
-                                        className="group flex w-full items-center justify-between rounded-2xl bg-red-50 p-5 active:scale-[0.98] transition-all dark:bg-red-500/10"
+                                        className="group flex w-full items-center justify-between rounded-full bg-red-50 p-5 active:scale-[0.98] transition-all dark:bg-red-500/10"
                                     >
                                         <span className="font-semibold text-red-600 dark:text-red-400">
                                             Keluar Akun
