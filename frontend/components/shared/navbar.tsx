@@ -16,7 +16,7 @@ import { Manrope } from 'next/font/google';
 import { LogoutModal } from './logout-modal';
 import { useRouter } from 'next/navigation';
 
-const iosSpring: Transition<ValueAnimationTransition> | undefined = {
+export const iosSpring: Transition<ValueAnimationTransition> | undefined = {
     type: 'spring',
     stiffness: 500,
     damping: 30,

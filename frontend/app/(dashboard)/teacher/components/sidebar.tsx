@@ -39,7 +39,7 @@ export function TeacherSidebar() {
                 <div className="flex-1 overflow-y-auto px-3 py-6">
                     <nav className="flex flex-col gap-1">
                         {NAV_ITEMS.map((item) => {
-                            const isActive = pathname === item.href;
+                            const isActive = pathname.startsWith(item.href)
 
                             return (
                                 <Link
@@ -58,10 +58,10 @@ export function TeacherSidebar() {
                     </nav>
                 </div>
 
-                <div className="border-t border-zinc-200 p-4 dark:border-zinc-800">
+                <div className="border-t border-zinc-200 h-16 flex items-center px-8 dark:border-zinc-800">
                     <Link
                         href="/"
-                        className="rounded-full flex hover:scale-105 p-3 "
+                        className="rounded-full flex hover:scale-105 "
                     >
                         <div className="flex items-center gap-3">
                             <Icon icon="mingcute:home-5-fill" />
@@ -78,7 +78,7 @@ export function TeacherSidebar() {
             {/* MOBILE BOTTOM NAV  */}
             <nav className="fixed bottom-0 left-0 right-0 z-50 flex h-16 items-center justify-around border-t border-zinc-200 bg-white/80 backdrop-blur-lg dark:border-zinc-800 dark:bg-zinc-950/80 md:hidden pb-safe">
                 {NAV_ITEMS.map((item) => {
-                    const isActive = pathname === item.href;
+                     const isActive = pathname.startsWith(item.href)
 
                     return (
                         <Link

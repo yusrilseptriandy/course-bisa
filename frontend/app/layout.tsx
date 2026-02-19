@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans } from 'next/font/google';
 import "./globals.css";
 import { ThemeProvider } from '@/components/theme-provider';
+import Providers from "./providers";
+import { Toaster } from 'react-hot-toast';
 
 const pJS = Plus_Jakarta_Sans({
     subsets: ['latin'],
@@ -27,7 +29,20 @@ export default function RootLayout({
                   enableSystem={false}
                   disableTransitionOnChange
               >
+                 <Providers>
                   {children}
+                  <Toaster
+  toastOptions={{
+    // Gaya dasar untuk semua jenis toast
+    style: {
+      fontSize: '13px', 
+      background: '#171717',
+      color: '#fff',
+      borderRadius: '50px',
+    },
+  }}
+/>
+                 </Providers>
               </ThemeProvider>
           </body>
       </html>
