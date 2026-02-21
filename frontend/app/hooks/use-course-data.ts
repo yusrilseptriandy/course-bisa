@@ -1,10 +1,23 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/app/libs/axios';
+import { useRouter } from 'next/navigation';
 
 
 interface Category {
     id: string;
     name: string;
+}
+
+enum VideoStatus {
+  PROCESSING = "PROCESSING",
+  READY = "READY",
+  FAILED = "FAILED",
+}
+
+enum CourseStatus {
+    DRAFT = "DRAFT",
+    READY = "READY",
+    PUBLISHED = "PUBLISHED"
 }
 
 export interface Course {
@@ -14,11 +27,17 @@ export interface Course {
     thumbnail: string;
     categoryId: string;
     price: number;
+    isPublish: boolean
+    muxPlaybackId: string
+    videoStatus: VideoStatus
+    courseStatus: CourseStatus
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     attachments: any[];
 }
 
+
 export function useCourseData(courseId: string) {
+    const router = useRouter();
     const queryClient = useQueryClient();
     
     const uploadVideoInit = useMutation({
@@ -36,6 +55,7 @@ export function useCourseData(courseId: string) {
             const res = await api.get(`http://localhost:4000/api/courses/${courseId}`);
             return res.data.data || res.data;
         },
+        refetchOnWindowFocus: false,
         enabled: !!courseId,
     });
 
@@ -59,8 +79,11 @@ export function useCourseData(courseId: string) {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['course', courseId] });
+            router.push(`/teacher/dashboard/course/${courseId}/video`);
         },
     });
+
+    
 
     return {
         course: courseQuery.data,

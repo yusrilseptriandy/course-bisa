@@ -2,7 +2,7 @@
 
 import { Icon } from '@iconify/react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 export const isUUID = (uuid: string) => {
     const regex =
@@ -12,6 +12,7 @@ export const isUUID = (uuid: string) => {
 
 export default function Header() {
     const pathname = usePathname();
+    const router = useRouter();
     const pathSegments = pathname.split('/');
     const potentialId = pathSegments[4];
 
@@ -20,16 +21,13 @@ export default function Header() {
         <div className="w-full h-16 border-b px-3 md:pl-8 flex items-center border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 sticky top-0 z-50">
             {shoulShowButtonBack && (
                 <div className='flex justify-between w-full'>
-                    <button className="flex items-center justify-center gap-2">
+                    <button onClick={() => router.back()} className="flex items-center justify-center gap-2 cursor-pointer">
                         <Icon icon={'proicons:arrow-left'} />
-                        <Link
-                            href={
-                                'http://localhost:3000/teacher/dashboard/course'
-                            }
+                        <p
                             className="text-sm"
                         >
                             Kembali
-                        </Link>
+                        </p>
                     </button>
                     <div className="flex items-center gap-4 mr-8">
                         <button className="flex items-center hover:scale-95 cursor-pointer text-red-600 text-xs gap-1">

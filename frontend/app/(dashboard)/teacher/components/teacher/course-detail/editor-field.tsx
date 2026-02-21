@@ -11,7 +11,7 @@ interface EditorFieldProps {
 export const EditorField = ({ label, children, isEditing, onToggleEdit, charCount }: EditorFieldProps) => (
   <div className="group border border-gray-200 dark:border-[#3e3e3e] focus-within:border-[#3ea6ff] rounded-lg px-4 py-2 w-full bg-white dark:bg-transparent transition-all relative">
     <div className="flex justify-between items-center mb-1">
-      <p className="text-[11px] font-medium text-[#aaaaaa] group-focus-within:text-[#3ea6ff] uppercase tracking-wider">
+      <p className="text-[12px] font-medium text-[#aaaaaa] group-focus-within:text-[#3ea6ff] tracking-wider">
         {label}
       </p>
       {onToggleEdit && (

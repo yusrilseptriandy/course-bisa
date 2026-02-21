@@ -8,10 +8,10 @@ const SG = Manrope();
 
 export default function Home() {
     return (
-        <div className="flex flex-col min-h-screen w-full ">
+        <div className="flex flex-col min-h-screen w-full dark:bg-black bg-zinc-100">
             <div className="w-full h-min flex flex-col md:flex-row mt-3 px-3 md:px-0">
                 <section className="w-full lg:w-5/12 flex flex-col lg:pl-20">
-                    <div className="w-max bg-zinc-100 dark:bg-slate-900  rounded-full pr-4  flex items-center ">
+                    <div className="w-max bg-white dark:bg-slate-900  rounded-full pr-4  flex items-center ">
                         <Icon
                             icon={'bi:dot'}
                             className="text-sky-600 animate-pulse text-4xl "
@@ -30,7 +30,7 @@ export default function Home() {
                         </span>
                     </h1>
                     <div
-                        className={`${SG.className} flex flex-col gap-1 p-3 items-start font-extrabold`}
+                        className={`${SG.className} flex flex-col gap-1 p-3 items-start font-semibold text-sm`}
                     >
                         <div className="flex items-center gap-2">
                             <div className=" bg-green-600 rounded-full">
@@ -39,7 +39,7 @@ export default function Home() {
                                     className="text-white"
                                 />
                             </div>
-                            <p className=" text-zinc-800 dark:text-white">
+                            <p>
                                 Sertifikat Resmi
                             </p>
                         </div>
@@ -57,11 +57,19 @@ export default function Home() {
                         </div>
                     </div>
                 </section>
-                <section className="w-full lg:w-7/12 items-center justify-center flex">
+                <section className="w-full lg:w-7/12 items-center justify-center hidden md:flex">
                     <ImageWithSkeleton
-                        src="/hero.png"
-                        width={600}
-                        height={400}
+                        src="/brain.svg"
+                        width={180}
+                        height={200}
+                        alt="Ilustrasi halaman utama aplikasi"
+                        wrapperClassName="rounded-xl"
+                        className="rounded-xl shadow-lg"
+                    />
+                    <ImageWithSkeleton
+                        src="/code.svg"
+                        width={300}
+                        height={300}
                         alt="Ilustrasi halaman utama aplikasi"
                         wrapperClassName="rounded-xl"
                         className="rounded-xl shadow-lg"

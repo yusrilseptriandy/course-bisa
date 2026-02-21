@@ -114,7 +114,7 @@ export default function Navbar() {
                 isLoading={isLoading}
             />
 
-            <nav className="sticky top-0 z-50 w-full border-b border-zinc-100 bg-white/70 backdrop-blur-md dark:bg-black/80 dark:border-zinc-800">
+            <nav className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-md dark:bg-black/80 dark:border-zinc-800">
                 <div className="flex h-16 items-center justify-between px-4 md:px-6 gap-4">
                     <div className="flex items-center shrink-0">
                         <Icon

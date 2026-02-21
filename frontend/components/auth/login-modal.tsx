@@ -313,9 +313,9 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                                     whileTap={{ scale: 0.95 }}
                                     disabled={isLoading}
                                     className={`
-                                        w-full h-12 rounded-full font-bold 
+                                        w-full h-12 rounded-full font-semibold 
                                         flex items-center justify-center
-                                        transition-all duration-300
+                                        transition-all duration-300 text-sm
                                         ${
                                             isLoading
                                                 ? 'bg-black/60 dark:bg-zinc-50/60 cursor-not-allowed opacity-70'
@@ -331,9 +331,9 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                                             className="animate-spin"
                                         />
                                     ) : isRegister ? (
-                                        'Daftar Sekarang'
+                                        'Daftar'
                                     ) : (
-                                        'Masuk Sekarang'
+                                        'Masuk'
                                     )}
                                 </motion.button>
 

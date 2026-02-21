@@ -27,6 +27,12 @@ enum PaymentStatus {
   CANCELLED
 }
 
+enum CourseStatus {
+  DRAFT
+  READY
+  PUBLISHED
+}
+
 enum VideoStatus {
   PROCESSING
   READY
@@ -136,6 +142,7 @@ model Course {
   categoryId      String?
   category        Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
   isPublish       Boolean? @default(false)
+  courseStatus    CourseStatus @default(DRAFT)
 
   ownerId String
   owner   User   @relation(fields: [ownerId], references: [id], onDelete: Restrict)

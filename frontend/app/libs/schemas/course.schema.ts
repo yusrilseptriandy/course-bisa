@@ -9,11 +9,12 @@ export const courseSchema = z.object({
   desc: z.string().min(10, 'Deskripsi minimal 10 karakter'),
   categoryId: z.string().min(1, 'Kategori harus dipilih'),
   price: z.coerce.number<number>().min(0, 'Harga tidak boleh negatif'),
-  thumbnail: z
-        .any()
-        .refine((file) => file instanceof File || (typeof file === 'string' && file.length > 0), {
-            message: 'Thumbnail wajib diunggah',
-        }),
+  thumbnail: z.union([
+        z.instanceof(File, { message: "Thumbnail wajib diisi" }),
+        z.string().min(1, "Thumbnail wajib diisi")
+    ], {
+        error: "Thumbnail wajib diisi",
+    })
 })
 
 export type CreateCourseName = z.infer<typeof createNameCourseSchema>;

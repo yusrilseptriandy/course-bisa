@@ -9,7 +9,7 @@ export default function CardCourse() {
             {courses.map((item, index) => (
                 <div
                     key={index}
-                    className="dark:bg-[#111] border dark:border-0 border-zinc-200 rounded-2xl overflow-hidden p-3 flex flex-col gap-3 "
+                    className="dark:bg-[#171717] bg-white rounded-2xl overflow-hidden p-3 flex flex-col gap-3 "
                 >
                     <div className="relative w-full aspect-video rounded-xl overflow-hidden">
                         <Image
