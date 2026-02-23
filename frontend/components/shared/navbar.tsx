@@ -13,8 +13,8 @@ import { LoginModal } from '../auth/login-modal';
 import { authClient } from '@/app/libs/auth-client';
 import Link from 'next/link';
 import { Manrope } from 'next/font/google';
-import { LogoutModal } from './logout-modal';
 import { useRouter } from 'next/navigation';
+import { ConfirmModal } from './confirm-modal';
 
 export const iosSpring: Transition<ValueAnimationTransition> | undefined = {
     type: 'spring',
@@ -25,13 +25,12 @@ export const iosSpring: Transition<ValueAnimationTransition> | undefined = {
 const MENU_ITEMS = [
     {
         label: 'Dashboard',
-        icon: 'streamline-plump-color:code-monitor-2-flat',
+        icon: 'mage:dashboard-fill',
         href: '/teacher/dashboard/course',
     },
-    { label: 'Profile Saya', icon: 'fluent-color:person-48', href: '/profile' },
-    { label: 'Kelas Saya', icon: 'fluent-color:book-open-lightbulb-20', href: '/kelas' },
-    { label: 'Sertifikat', icon: 'fluent-color:certificate-16', href: '/sertifikat' },
-    { label: 'Keranjang', icon: 'streamline-plump-color:shopping-basket-1-flat', href: '/cart' },
+    { label: 'Profile Saya', icon: 'mage:user-square-fill', href: '/profile' },
+    { label: 'Kelas Saya', icon: 'mage:book-fill', href: '/kelas' },
+    { label: 'Sertifikat', icon: 'fluent:certificate-16-filled', href: '/sertifikat' },
 ];
 
 const SG = Manrope();
@@ -107,7 +106,7 @@ export default function Navbar() {
                 onClose={() => setShowLoginModal(false)}
             />
 
-            <LogoutModal
+            <ConfirmModal
                 isOpen={showLogoutModal}
                 onClose={() => setShowLogoutModal(false)}
                 onConfirm={handleConfirmLogout}
@@ -274,7 +273,8 @@ export default function Navbar() {
                                                                     icon={
                                                                         item.icon
                                                                     }
-                                                                    width={18}
+                                                                    className='dark:text-white'
+                                                                    width={20}
                                                                 />
                                                                 {item.label}
                                                             </Link>
@@ -304,7 +304,6 @@ export default function Navbar() {
                             <ModeToggle />
                         </div>
 
-                        {/* Hamburger Button Mobile */}
                         <button
                             onClick={() =>
                                 setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -325,7 +324,7 @@ export default function Navbar() {
                 </div>
             </nav>
 
-            {/* --- BOTTOM SHEET AREA (MOBILE ONLY) --- */}
+            {/* --- BOTTOM SHEET AREA  --- */}
             <AnimatePresence>
                 {isMobileMenuOpen && session && (
                     <>
@@ -334,7 +333,7 @@ export default function Navbar() {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className="fixed inset-0 z-60 bg-black/40 backdrop-blur-[2px] md:hidden"
+                            className="fixed inset-0 z-60 bg-white/30 backdrop-blur-[2px] md:hidden"
                         />
 
                         <motion.div
@@ -357,7 +356,7 @@ export default function Navbar() {
                                 )
                                     setIsMobileMenuOpen(false);
                             }}
-                            className={`fixed bottom-0 left-0 right-0 z-70 flex flex-col rounded-t-4xl bg-white p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:bg-zinc-900 md:hidden max-h-[85vh] overflow-y-auto ${SG.className}`}
+                            className={`fixed bottom-0 left-0 right-0 z-70 flex flex-col rounded-t-4xl bg-white p-6 shadow-[0_-10px_40px_rgba(0,0,0,0.1)] dark:bg-black md:hidden max-h-[85vh] overflow-y-auto ${SG.className}`}
                         >
                             <div className="absolute left-1/2 top-4 h-1.5 w-12 -translate-x-1/2 rounded-full bg-zinc-300 dark:bg-zinc-700" />
 
@@ -390,7 +389,7 @@ export default function Navbar() {
                                     <ModeToggle />
                                 </div>
 
-                                <div className="h-px w-full bg-zinc-100 dark:bg-zinc-800" />
+                                <div className="h-px w-full bg-zinc-100 dark:bg-zinc-950" />
 
                                 <div className="flex flex-col gap-2">
                                     {filteredMenuItems.map((item, index) => (
@@ -400,13 +399,13 @@ export default function Navbar() {
                                             onClick={() =>
                                                 setIsMobileMenuOpen(false)
                                             }
-                                            className="flex items-center justify-between p-4 rounded-full bg-zinc-50 dark:bg-zinc-800/40 hover:bg-zinc-100 dark:hover:bg-zinc-800 active:scale-[0.98] transition-all"
+                                            className="flex items-center justify-between p-4 rounded-full dark:bg-black hover:bg-zinc-100 dark:hover:bg-zinc-800 active:scale-[0.98] transition-all"
                                         >
                                             <div className="flex items-center gap-3">
                                                 <Icon
                                                     icon={item.icon}
-                                                    width={22}
-                                                    className="text-zinc-600 dark:text-zinc-400"
+                                                    width={24}
+                                                   className='dark:text-white'
                                                 />
                                                 <span className="font-medium ">
                                                     {item.label}

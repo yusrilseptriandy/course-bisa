@@ -82,12 +82,6 @@ export default function CategorySelect({
           w-full text-sm
           flex items-center justify-between
           transition-all duration-200
-          border
-          ${
-            error
-              ? "border-red-500"
-              : "border-0"
-          }
           focus:outline-none
         `}
       >

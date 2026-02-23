@@ -5,7 +5,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { motion, Variants } from 'framer-motion'; // Import motion
+import { motion, Variants } from 'framer-motion';
 import {
     CreateCourseName,
     createNameCourseSchema,
@@ -111,10 +111,10 @@ export default function CreateCourseModal({ onClose }: ModalProps) {
                 ${errors.name ? 'border-red-500' : 'border-[#3e3e3e] focus-within:border-[#3ea6ff]'}`}
                         >
                             <label
-                                className={`block text-[11px] font-medium mb-1 transition-colors
+                                className={`block text-[12px] font-medium mb-1 transition-colors
                   ${errors.name ? 'text-red-500' : 'text-[#aaaaaa] group-focus-within:text-[#3ea6ff]'}`}
                             >
-                                Title (required)
+                                Judul Kursus
                             </label>
                             <input
                                 {...register('name')}

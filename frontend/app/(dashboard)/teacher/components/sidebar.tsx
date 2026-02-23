@@ -28,7 +28,7 @@ export function TeacherSidebar() {
 
     return (
         <>
-            <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 md:flex md:flex-col">
+            <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-black md:flex md:flex-col">
                 <div className="flex h-16 items-center border-b border-zinc-200 px-6 dark:border-zinc-800 w-full">
                     <div className="flex items-center justify-between w-full gap-2 font-bold text-xl tracking-tight text-zinc-900 dark:text-zinc-100">
                         <span className=" font-extrabold">CourseBisa</span>
@@ -47,7 +47,7 @@ export function TeacherSidebar() {
                                     href={item.href}
                                     className={`group flex items-center gap-3 rounded-full px-3 py-2.5 text-sm font-semibold transition-all duration-200 hover:bg-zinc-100 hover:dark:bg-white/20 hover:dark:text-white ${
                                         isActive &&
-                                        'dark:bg-white/20 bg-zinc-100'
+                                        'dark:bg-white/20 bg-zinc-200'
                                     }`}
                                 >
                                     <Icon icon={item.icon} width={22} />

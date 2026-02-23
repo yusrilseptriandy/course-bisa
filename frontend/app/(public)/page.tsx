@@ -1,10 +1,9 @@
 import CardCourse from '@/components/shared/card-course';
 import ImageWithSkeleton from '@/components/shared/image-with-skeleton';
 import { Icon } from '@iconify/react';
-import { Inter, Manrope } from 'next/font/google';
+import { Inter } from 'next/font/google';
 
 const fonstCustome = Inter();
-const SG = Manrope();
 
 export default function Home() {
     return (
@@ -29,33 +28,7 @@ export default function Home() {
                             Tanpa Batas.
                         </span>
                     </h1>
-                    <div
-                        className={`${SG.className} flex flex-col gap-1 p-3 items-start font-semibold text-sm`}
-                    >
-                        <div className="flex items-center gap-2">
-                            <div className=" bg-green-600 rounded-full">
-                                <Icon
-                                    icon={'proicons:checkmark'}
-                                    className="text-white"
-                                />
-                            </div>
-                            <p>
-                                Sertifikat Resmi
-                            </p>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                            <div className=" bg-green-600 rounded-full">
-                                <Icon
-                                    icon={'proicons:checkmark'}
-                                    className="text-white"
-                                />
-                            </div>
-                            <p className=" text-zinc-800 dark:text-white">
-                                Akses Seumur Hidup
-                            </p>
-                        </div>
-                    </div>
+                 
                 </section>
                 <section className="w-full lg:w-7/12 items-center justify-center hidden md:flex">
                     <ImageWithSkeleton

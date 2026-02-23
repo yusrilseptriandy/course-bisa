@@ -10,9 +10,6 @@ export const api = axios.create({
 
 api.interceptors.request.use(async (config) => {
   const { data: authData } = await authClient.token();
-
-  console.log("Token yang dikirim:", authData?.token);
-
   if (authData?.token) {
     config.headers.Authorization = `Bearer ${authData.token}`;
   }

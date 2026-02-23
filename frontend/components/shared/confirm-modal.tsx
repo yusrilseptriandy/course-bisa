@@ -4,19 +4,26 @@ import { Icon } from '@iconify/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect } from 'react';
 
-interface LogoutModalProps {
+interface ConfirmModalProps {
     isOpen: boolean;
     onClose: () => void;
     onConfirm: () => void;
     isLoading: boolean;
+    title?: string
+    description?: string
+    className?: string
+    buttomConfirm?: string
 }
 
-export function LogoutModal({
+export function ConfirmModal({
     isLoading,
     isOpen,
     onClose,
     onConfirm,
-}: LogoutModalProps) {
+    title = "Keluar Akun?",
+    description = "Kamu perlu masuk kembali",
+    buttomConfirm = "Keluar"
+}: ConfirmModalProps) {
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -49,15 +56,14 @@ export function LogoutModal({
                             damping: 30,
                             stiffness: 500,
                         }}
-                        className="relative w-full max-w-70 overflow-hidden rounded-[20px] bg-white/85 text-center shadow-2xl backdrop-blur-xl dark:bg-zinc-900/85 pb-2"
+                        className="relative w-full max-w-80 overflow-hidden rounded-[20px] bg-white/85 text-center shadow-2xl backdrop-blur-xl dark:bg-zinc-900/85 pb-2"
                     >
                         <div className="flex flex-col items-center p-6 pb-5">
                             <h3 className="text-[17px] font-semibold text-zinc-900 dark:text-white">
-                                Keluar Akun?
+                                {title}
                             </h3>
                             <p className="mt-1 text-[13px] leading-relaxed text-zinc-500 dark:text-zinc-400">
-                                Kamu perlu masuk kembali untuk mengakses akun
-                                ini nanti.
+                               {description}
                             </p>
                         </div>
 
@@ -84,7 +90,7 @@ export function LogoutModal({
                                         <span>Sebentar...</span>
                                     </div>
                                 ) : (
-                                    'Keluar'
+                                    buttomConfirm
                                 )}
                             </button>
                         </div>
