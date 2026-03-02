@@ -22,6 +22,12 @@ enum CourseStatus {
     PUBLISHED = 'PUBLISHED',
 }
 
+interface Owner {
+    id: string;
+    name: string;
+    image?: string;
+}
+
 export interface Course {
     id: string;
     name: string;
@@ -33,10 +39,14 @@ export interface Course {
     muxPlaybackId: string;
     videoStatus: VideoStatus;
     courseStatus: CourseStatus;
+    durationSeconds?: number
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    attachment: any[];
+    attachments: any[];
+    owner? : Owner
     isDeleted: boolean
+    createdAt?: Date 
 }
+
 
 interface UploadVideoArgs {
     file: File;
@@ -48,7 +58,7 @@ interface UploadAttachmentsArg {
     onProgress?: (percent: number) => void;
 }
 
-export function useCourseData(courseId: string) {
+export function useCourseData(courseId?: string) {
     const router = useRouter();
     const queryClient = useQueryClient();
 
@@ -65,17 +75,16 @@ export function useCourseData(courseId: string) {
     });
 
     // ini get course untuk seluruh nya
-    const courseQuery = useQuery({
-        queryKey: ['course', courseId],
-        queryFn: async (): Promise<Course> => {
-            const res = await api.get(
-                `http://localhost:4000/api/courses/${courseId}`,
-            );
-            return res.data.data || res.data;
-        },
-        refetchOnWindowFocus: false,
-        enabled: !!courseId,
-    });
+    const publicCoursesQuery = useQuery({
+    queryKey: ['public-courses'],
+    queryFn: async (): Promise<Course[]> => {
+        const res = await api.get(
+            'http://localhost:4000/api/courses'
+        );
+        return res.data.data || res.data;
+    },
+    staleTime: 1000 * 60 * 5, // 5 menit
+});
 
     const categoriesQuery = useQuery({
         queryKey: ['categories'],
@@ -108,6 +117,30 @@ export function useCourseData(courseId: string) {
             router.push(`/teacher/dashboard/course/${courseId}/video`);
         },
     });
+
+     // ini get course berdarkan id
+    const courseQuery = useQuery({
+        queryKey: ['course', courseId],
+        queryFn: async (): Promise<Course> => {
+            const res = await api.get(
+                `http://localhost:4000/api/courses/${courseId}`,
+            );
+            return res.data.data || res.data;
+        },
+        refetchOnWindowFocus: false,
+        enabled: !!courseId,
+    });
+
+    const publicCourseDetailQuery = useQuery({
+    queryKey: ['public-course', courseId],
+    queryFn: async (): Promise<Course> => {
+        const res = await api.get(
+            `http://localhost:4000/api/courses/publik/${courseId}`
+        );
+        return res.data.data || res.data;
+    },
+    enabled: !!courseId,
+});
 
     const uploadAttachments = useMutation({
         mutationFn: async ({ files, onProgress }: UploadAttachmentsArg) => {
@@ -239,33 +272,33 @@ export function useCourseData(courseId: string) {
         onSuccess: () => {
             toast.success('Kursus berhasil dipublikasikan');
 
-           const duration = 1500;
-        const end = Date.now() + duration;
+            const duration = 1500;
+            const end = Date.now() + duration;
 
-        (function frame() {
-            confetti({
-                particleCount: 3,
-                angle: 60,
-                spread: 55,
-                origin: { x: 0 },
-            });
-            confetti({
-                particleCount: 3,
-                angle: 120,
-                spread: 55,
-                origin: { x: 1 },
-            });
+            (function frame() {
+                confetti({
+                    particleCount: 3,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                });
+                confetti({
+                    particleCount: 3,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                });
 
-            if (Date.now() < end) {
-                requestAnimationFrame(frame);
-            }
-        })();
-        
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            })();
+
             queryClient.invalidateQueries({ queryKey: ['course', courseId] });
             queryClient.invalidateQueries({ queryKey: ['owner-courses'] });
             setTimeout(() => {
-            router.push('/teacher/dashboard/course');
-        }, 2000);
+                router.push('/teacher/dashboard/course');
+            }, 2000);
         },
         onError: (error) => {
             const message = error.message || 'Gagal mempublikasikan kursus';
@@ -275,10 +308,14 @@ export function useCourseData(courseId: string) {
 
     return {
         course: courseQuery.data,
-        categories: categoriesQuery.data,
         isLoading: courseQuery.isLoading || categoriesQuery.isLoading,
-        ownerCourses: ownerCoursesQuery.data,
+        publicCourses: publicCoursesQuery.data,
+        isPublicLoading: publicCoursesQuery.isLoading,
+        publicCourse: publicCourseDetailQuery.data,
         isError: courseQuery.isError || categoriesQuery.isError,
+        isPublicCourseLoading: publicCourseDetailQuery.isLoading,
+        categories: categoriesQuery.data,
+        ownerCourses: ownerCoursesQuery.data,
         updateCourse,
         uploadVideoToMux,
         uploadAttachments,
@@ -287,3 +324,4 @@ export function useCourseData(courseId: string) {
         publishCourse,
     };
 }
+

@@ -2,6 +2,7 @@
 
 import { ModeToggle } from '@/components/shared/mode-toggle';
 import { Icon } from '@iconify/react';
+import { Young_Serif } from 'next/font/google';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -22,7 +23,9 @@ const NAV_ITEMS = [
         icon: 'solar:settings-outline',
     },
 ];
-
+const googleFont = Young_Serif({
+    weight: '400',
+});
 export function TeacherSidebar() {
     const pathname = usePathname();
 
@@ -30,8 +33,8 @@ export function TeacherSidebar() {
         <>
             <aside className="fixed left-0 top-0 z-40 hidden h-screen w-64 border-r border-zinc-200 bg-white dark:border-zinc-800 dark:bg-black md:flex md:flex-col">
                 <div className="flex h-16 items-center border-b border-zinc-200 px-6 dark:border-zinc-800 w-full">
-                    <div className="flex items-center justify-between w-full gap-2 font-bold text-xl tracking-tight text-zinc-900 dark:text-zinc-100">
-                        <span className=" font-extrabold">CourseBisa</span>
+                    <div className="flex items-center justify-between w-full gap-2 font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+                        <span className={`${googleFont.className} text-2xl text-orange-500`}>Habitz</span>
                         <ModeToggle />
                     </div>
                 </div>

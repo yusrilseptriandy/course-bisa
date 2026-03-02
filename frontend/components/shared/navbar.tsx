@@ -12,7 +12,7 @@ import { ModeToggle } from './mode-toggle';
 import { LoginModal } from '../auth/login-modal';
 import { authClient } from '@/app/libs/auth-client';
 import Link from 'next/link';
-import { Manrope } from 'next/font/google';
+import {  Geist, Young_Serif } from 'next/font/google';
 import { useRouter } from 'next/navigation';
 import { ConfirmModal } from './confirm-modal';
 
@@ -22,6 +22,10 @@ export const iosSpring: Transition<ValueAnimationTransition> | undefined = {
     damping: 30,
 };
 
+const googleFont = Young_Serif({
+    weight: '400',
+});
+
 const MENU_ITEMS = [
     {
         label: 'Dashboard',
@@ -30,12 +34,16 @@ const MENU_ITEMS = [
     },
     { label: 'Profile Saya', icon: 'mage:user-square-fill', href: '/profile' },
     { label: 'Kelas Saya', icon: 'mage:book-fill', href: '/kelas' },
-    { label: 'Sertifikat', icon: 'fluent:certificate-16-filled', href: '/sertifikat' },
 ];
 
-const SG = Manrope();
+const SG = Geist();
 
 export default function Navbar() {
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
     const router = useRouter();
     const [showLoginModal, setShowLoginModal] = useState(false);
     const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -45,6 +53,7 @@ export default function Navbar() {
 
     const desktopMenuRef = useRef<HTMLDivElement>(null);
     const { data: session, isPending } = authClient.useSession();
+
 
     const filteredMenuItems = MENU_ITEMS.filter((item) => {
         if (item.label === 'Dashboard') {
@@ -99,6 +108,8 @@ export default function Navbar() {
             setIsLoading(false);
         }
     };
+    if (!mounted) return <div className="w-10 h-10 rounded-full animate-pulse bg-zinc-100" />;
+
     return (
         <>
             <LoginModal
@@ -115,13 +126,12 @@ export default function Navbar() {
 
             <nav className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-md dark:bg-black/80 dark:border-zinc-800">
                 <div className="flex h-16 items-center justify-between px-4 md:px-6 gap-4">
-                    <div className="flex items-center shrink-0">
-                        <Icon
-                            icon={'material-symbols:owl-rounded'}
-                            width={34}
-                            className="text-black dark:text-white"
-                        />
-                    </div>
+                    <Link href={'/'} className="flex items-center shrink-0">
+                        <Icon icon={"wordpress:loop"} width={64} className='text-orange-500'/>
+                        <h1 className={`${googleFont.className} text-2xl hidden md:flex tracking-tight -ml-2`}>
+                            Habitz
+                        </h1>
+                    </Link>
 
                     <motion.div
                         className="flex-1 flex justify-center md:justify-start origin-left"
@@ -138,7 +148,7 @@ export default function Navbar() {
                                 className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-zinc-400"
                             />
                             <input
-                                className="py-2 w-full rounded-full bg-zinc-100 pl-10 pr-4 text-sm font-medium outline-none transition-all focus:ring-2 focus:ring-zinc-500/20 dark:bg-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400"
+                                className="py-2.5 w-full rounded-full bg-zinc-100 pl-10 pr-4 text-sm font-medium outline-none transition-all focus:ring-2 focus:ring-zinc-500/20 dark:bg-zinc-800 dark:text-zinc-100 placeholder:text-zinc-400"
                                 placeholder="Cari pembelajaran..."
                             />
                         </div>
@@ -184,7 +194,7 @@ export default function Navbar() {
                             ) : (
                                 <>
                                     {/* TRIGGER BUTTON DESKTOP */}
-                                    <button
+                                    <div
                                         onClick={() =>
                                             setIsDesktopMenuOpen(
                                                 !isDesktopMenuOpen,
@@ -199,7 +209,7 @@ export default function Navbar() {
                                                 className="text-zinc-700 dark:text-zinc-200"
                                             />
                                         </div>
-                                        <p className="text-nowrap font-semibold text-sm text-zinc-700 dark:text-zinc-200 max-25 truncate">
+                                        <p className={`text-nowrap font-semibold text-sm text-zinc-700 dark:text-zinc-200 max-25 truncate ${googleFont.className}`}>
                                             {session.user.name}
                                         </p>
                                         <Icon
@@ -207,7 +217,7 @@ export default function Navbar() {
                                             width={16}
                                             className={`text-zinc-400 transition-transform duration-200 ${isDesktopMenuOpen ? 'rotate-180' : ''}`}
                                         />
-                                    </button>
+                                    </div>
 
                                     {/* DROPDOWN MENU DESKTOP */}
                                     <AnimatePresence>
@@ -273,7 +283,7 @@ export default function Navbar() {
                                                                     icon={
                                                                         item.icon
                                                                     }
-                                                                    className='dark:text-white'
+                                                                    className="dark:text-white"
                                                                     width={20}
                                                                 />
                                                                 {item.label}
@@ -288,12 +298,10 @@ export default function Navbar() {
                                                     onClick={openLogoutModal}
                                                     className="w-full flex items-center gap-3 px-3 py-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/10 text-sm font-medium text-red-600 dark:text-red-400 transition-colors"
                                                 >
-                                                  
-                                                        <Icon
-                                                            icon="mingcute:align-arrow-right-line"
-                                                            width={18}
-                                                        />
-                                                    
+                                                    <Icon
+                                                        icon="mingcute:align-arrow-right-line"
+                                                        width={18}
+                                                    />
                                                     Keluar
                                                 </button>
                                             </motion.div>
@@ -308,7 +316,7 @@ export default function Navbar() {
                             onClick={() =>
                                 setIsMobileMenuOpen(!isMobileMenuOpen)
                             }
-                            className="flex h-9 w-9 items-center justify-center rounded-full text-zinc-900 bg-zinc-100 dark:text-zinc-100 dark:bg-zinc-800 md:hidden z-50 relative"
+                            className="flex h-9 w-9 items-center justify-center rounded-full text-zinc-900  dark:text-zinc-100  md:hidden z-50 relative"
                         >
                             <Icon
                                 icon={
@@ -405,7 +413,7 @@ export default function Navbar() {
                                                 <Icon
                                                     icon={item.icon}
                                                     width={24}
-                                                   className='dark:text-white'
+                                                    className="dark:text-white"
                                                 />
                                                 <span className="font-medium ">
                                                     {item.label}

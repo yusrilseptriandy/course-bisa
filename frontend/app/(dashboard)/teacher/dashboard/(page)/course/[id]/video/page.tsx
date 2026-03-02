@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { Icon } from '@iconify/react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { useCourseData } from '@/app/hooks/use-course-data';
 import MuxPlayer from '@mux/mux-player-react';
 import { ConfirmModal } from '@/components/shared/confirm-modal';
@@ -10,7 +10,6 @@ import CourseNotFound from '@/app/(dashboard)/teacher/components/course-not-foun
 
 export default function VideoPage() {
     const params = useParams();
-    const router = useRouter();
     const courseId = params.id as string;
 
     const {
@@ -93,7 +92,7 @@ export default function VideoPage() {
                         <MuxPlayer
                             playbackId={course.muxPlaybackId}
                             metadataVideoTitle={course.name}
-                            accentColor="#6600cc"
+                            accentColor="#F97316"
                             className="w-full h-full object-contain"
                         />
                     ) : (
@@ -107,7 +106,7 @@ export default function VideoPage() {
                                     <div className="h-1.5 w-full rounded-full bg-zinc-200 dark:bg-zinc-800 overflow-hidden">
                                         <div
                                             className="h-full bg-black dark:bg-white transition-all duration-300"
-                                            style={{ width: `${progress}%` ,backgroundColor: '#6600cc'}}
+                                            style={{ width: `${progress}%` ,backgroundColor: '#F97316'}}
                                         />
                                     </div>
                                 </div>
@@ -171,7 +170,7 @@ export default function VideoPage() {
                             <div className="h-1.5 w-full rounded-full bg-zinc-200 dark:bg-zinc-800 overflow-hidden">
                                 <div
                                     className="h-full bg-black dark:bg-white transition-all duration-300"
-                                    style={{ width: `${progressAttachment}%`, backgroundColor: '#6600cc' }}
+                                    style={{ width: `${progressAttachment}%`, backgroundColor: '#F97316' }}
                                 />
                             </div>
                         </div>
@@ -196,7 +195,7 @@ export default function VideoPage() {
                                         rel="noopener noreferrer"
                                         className="text-xs px-3 py-1.5 text-biru hover:text-blue-500 transition font-medium"
                                     >
-                                        Lihat
+                                        Unduh
                                     </a>
 
                                     <button

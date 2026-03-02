@@ -13,7 +13,7 @@ export default function CoursePage() {
   const { ownerCourses, isLoading } = useCourseData("");
 
   return (
-    <div className="min-h-screen bg-zinc-50/50 dark:bg-black">
+    <div className="min-h-screen bg-white dark:bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">

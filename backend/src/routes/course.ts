@@ -13,56 +13,146 @@ const mux = new Mux({
 });
 
 const getCourseKey = (id: string) => `draft:course:${id}`;
+const PUBLIC_COURSES_CACHE_KEY = 'courses:published:all';
 
 export const courseRoutes = new Elysia({ prefix: '/api/courses' })
     .use(redisPlugin)
-    .get('/:id', async ({ params: { id }, set, redis }) => {
-        const key = getCourseKey(id);
-        const draftRaw = await redis.get(key);
-        let course = await prisma.course.findUnique({
-            where: { id },
-            include: { attachments: true },
-        });
-        if (!course) {
-            if (draftRaw) {
-                const draft = JSON.parse(draftRaw);
-                return {
-                    success: true,
-                    data: draft,
-                    isDraft: true,
-                };
-            }
-            if (!course) {
-                set.status = 404;
-                return {
-                    success: false,
-                    error: 'Course tidak ditemukan di mana pun',
-                };
-            }
+    // Get data course for all
+    .get('/', async ({ redis }) => {
+        const cached = await redis.get(PUBLIC_COURSES_CACHE_KEY);
+
+        if (cached) {
+            return {
+                success: true,
+                data: JSON.parse(cached),
+                source: 'redis',
+            };
         }
-        const dbCourse = await prisma.course.findUnique({
+
+        const courses = await prisma.course.findMany({
+            where: {
+                isDeleted: false,
+                courseStatus: 'PUBLISHED',
+                videoStatus: 'READY',
+            },
+            include: {
+                category: true,
+                owner: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+            },
+            orderBy: {
+                createdAt: 'desc',
+            },
+        });
+
+        await redis.set(
+            PUBLIC_COURSES_CACHE_KEY,
+            JSON.stringify(courses),
+            'EX',
+            60 * 5,
+        );
+
+        return {
+            success: true,
+            data: courses,
+            source: 'database',
+        };
+    })
+    //Get course detail for all
+    .get('publik/:id/', async ({ params: { id }, set }) => {
+        const course = await prisma.course.findFirst({
+            where: {
+                id,
+                isDeleted: false,
+                courseStatus: 'PUBLISHED',
+                videoStatus: 'READY',
+            },
+            include: {
+                category: true,
+                owner: {
+                    select: {
+                        id: true,
+                        name: true,
+                    },
+                },
+                attachments: true,
+            },
+        });
+
+        if (!course) {
+            set.status = 404;
+            return { error: 'Course tidak ditemukan' };
+        }
+
+        return {
+            success: true,
+            data: course,
+        };
+    })
+    .use(authMiddleware)
+    //get data khusus kepemilikan owner
+    .get('/:id', async ({ params: { id }, set, redis, user }) => {
+        const draftKey = getCourseKey(id);
+
+        const draftRaw = await redis.get(draftKey);
+        if (draftRaw) {
+            const draft = JSON.parse(draftRaw);
+            if (draft.ownerId !== user?.id) {
+                set.status = 403;
+                return { error: 'Forbidden' };
+            }
+            return {
+                success: true,
+                data: draft,
+                isDraft: true,
+            };
+        }
+
+        const course = await prisma.course.findUnique({
             where: { id },
             include: {
                 category: true,
                 attachments: true,
             },
         });
-        if (!dbCourse || dbCourse.isDeleted) {
+
+        if (!course || course.isDeleted) {
             set.status = 404;
             return { error: 'Kursus tidak ditemukan atau telah dihapus' };
         }
 
-        return { success: true, data: course };
+        if (course.ownerId !== user?.id) {
+            set.status = 403;
+            return { error: 'Forbidden' };
+        }
+
+        return { success: true, data: course, isDraft: false };
     })
-    .get('/categories', async () => {
+    .get('/categories', async ({ redis }) => {
+        const key = 'categories:all';
+
+        const cached = await redis.get(key);
+        if (cached) {
+            return {
+                success: true,
+                data: JSON.parse(cached),
+                source: 'redis',
+            };
+        }
         const categories = await prisma.category.findMany({
             orderBy: {
                 name: 'asc',
             },
         });
-        return { success: true, data: categories };
+
+        await redis.set(key, JSON.stringify(categories), 'EX', 60 * 60 * 6);
+        return { success: true, data: categories, source: 'database' };
     })
-    .use(authMiddleware)
+
     .get('/owner', async ({ user, redis, set }) => {
         if (!user || user.role !== 'teacher') {
             set.status = 403;
@@ -81,7 +171,7 @@ export const courseRoutes = new Elysia({ prefix: '/api/courses' })
                         drafts.push({
                             ...parsed,
                             isPublish: false,
-                            isDeleted: false
+                            isDeleted: false,
                         });
                     }
                 }
@@ -90,7 +180,7 @@ export const courseRoutes = new Elysia({ prefix: '/api/courses' })
             const publishedCourses = await prisma.course.findMany({
                 where: {
                     ownerId: user.id,
-                    isDeleted: false
+                    isDeleted: false,
                 },
                 orderBy: {
                     updatedAt: 'desc',
@@ -357,8 +447,6 @@ export const courseRoutes = new Elysia({ prefix: '/api/courses' })
                 (file: any) => file.url === body.url,
             );
 
-            console.log(fileToDelete);
-
             if (fileToDelete) {
                 try {
                     const fileKey = fileToDelete.url.split('/').pop();
@@ -483,10 +571,11 @@ export const courseRoutes = new Elysia({ prefix: '/api/courses' })
                         data: { isDeleted: true },
                     });
 
+                    await redis.del(PUBLIC_COURSES_CACHE_KEY);
+
                     return {
                         success: true,
-                        message:
-                            'Kursus berhasil dipindahkan ke tempat sampah (Soft Delete)',
+                        message: 'Kursus berhasil dipindahkan ke tempat sampah',
                     };
                 } catch (error) {
                     console.error('Database Delete Error:', error);
@@ -559,6 +648,7 @@ export const courseRoutes = new Elysia({ prefix: '/api/courses' })
                     },
                 );
                 await redis.del(key);
+                await redis.del(PUBLIC_COURSES_CACHE_KEY);
                 return { success: true, data: finalDataCourse };
             } catch (error) {
                 console.error(error);
