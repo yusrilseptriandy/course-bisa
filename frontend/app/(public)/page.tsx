@@ -10,7 +10,7 @@ export default function Home() {
         setActiveCategory((prev) => (prev === id ? null : id));
     };
     return (
-        <div className="flex flex-col min-h-screen w-full dark:bg-black bg-white">
+        <div className="flex flex-col min-h-screen w-full dark:bg-abu bg-white">
             {categories && (
                 <div className="px-5 md:px-20 mt-4">
                     <div
@@ -34,7 +34,7 @@ export default function Home() {
                                 ${
                                     activeCategory === null
                                         ? 'bg-orange-500 text-white'
-                                        : 'bg-white border dark:border-0 border-zinc-200 text-zinc-700 hover:scale-95 dark:bg-zinc-900 dark:text-zinc-200'
+                                        : 'bg-white border dark:border-0 border-zinc-200 text-zinc-700 hover:scale-95 dark:bg-abu-second dark:text-zinc-200'
                                 }
                             `}
                         >
@@ -59,7 +59,7 @@ export default function Home() {
                                         ${
                                             isActive
                                                 ? 'bg-orange-500 text-white border-0'
-                                                : 'bg-white dark:border-0 border-zinc-200 text-zinc-700   hover:scale-95 dark:bg-zinc-900 dark:text-zinc-200 dark:border-zinc-800'
+                                                : 'bg-white dark:border-0 border-zinc-200 text-zinc-700   hover:scale-95 dark:bg-abu-second dark:text-zinc-200 dark:border-zinc-800'
                                         }
                                     `}
                                 >

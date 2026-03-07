@@ -7,32 +7,34 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 export default function CardCourse() {
-    const { publicCourses, isPublicLoading } = useCourseData();
+    const { publicCourses, isPublicLoading } = useCourseData(undefined, true);
     const [imageLoaded, setImageLoaded] = useState(false);
 
     if (isPublicLoading) {
         return (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full h-max py-10 px-5 md:px-20">
-                {[...Array(6)].map((_, i) => (
+                {Array.from({ length: 6 }).map((_, i) => (
                     <div
                         key={i}
-                        className="dark:bg-[#171717] bg-white border border-zinc-200 dark:border-0 rounded-2xl overflow-hidden p-3 flex flex-col gap-3 animate-pulse"
+                        className="dark:bg-[#171717] bg-white border border-zinc-200 dark:border-0 rounded-2xl overflow-hidden p-3 flex flex-col gap-3 scale-110"
                     >
-                        <div className="w-full aspect-video rounded-xl bg-gray-300 dark:bg-zinc-800" />
+                        <div className="w-full aspect-video rounded-xl bg-gray-200 dark:bg-zinc-800 animate-pulse" />
 
                         <div className="space-y-2">
-                            <div className="flex gap-2">
-                                <div className="h-3 w-10 bg-gray-300 dark:bg-zinc-800 rounded" />
-                                <div className="h-3 w-8 bg-gray-300 dark:bg-zinc-800 rounded" />
-                                <div className="h-3 w-12 bg-gray-300 dark:bg-zinc-800 rounded" />
+                            <div className="flex items-center gap-2">
+                                <div className="h-3 w-16 rounded bg-gray-200 dark:bg-zinc-800 animate-pulse" />
+                                <div className="h-3 w-10 rounded bg-gray-200 dark:bg-zinc-800 animate-pulse" />
+                                <div className="h-3 w-10 rounded bg-gray-200 dark:bg-zinc-800 animate-pulse" />
                             </div>
 
-                            <div className="h-4 w-3/4 bg-gray-300 dark:bg-zinc-800 rounded" />
-                            <div className="h-4 w-1/2 bg-gray-300 dark:bg-zinc-800 rounded" />
+                            <div className="space-y-1">
+                                <div className="h-3.5 w-full rounded bg-gray-200 dark:bg-zinc-800 animate-pulse" />
+                                <div className="h-3.5 w-3/4 rounded bg-gray-200 dark:bg-zinc-800 animate-pulse" />
+                            </div>
 
-                            <div className="flex justify-between mt-2">
-                                <div className="h-3 w-16 bg-gray-300 dark:bg-zinc-800 rounded" />
-                                <div className="h-3 w-20 bg-gray-300 dark:bg-zinc-800 rounded" />
+                            <div className="flex items-center justify-between">
+                                <div className="h-3 w-12 rounded bg-gray-200 dark:bg-zinc-800 animate-pulse" />
+                                <div className="h-3 w-20 rounded bg-gray-200 dark:bg-zinc-800 animate-pulse" />
                             </div>
                         </div>
 
@@ -40,10 +42,10 @@ export default function CardCourse() {
 
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                                <div className="w-6 h-6 rounded-full bg-gray-300 dark:bg-zinc-800" />
-                                <div className="h-3 w-16 bg-gray-300 dark:bg-zinc-800 rounded" />
+                                <div className="w-6 h-6 rounded-full bg-gray-200 dark:bg-zinc-800 animate-pulse" />
+                                <div className="h-3 w-20 rounded bg-gray-200 dark:bg-zinc-800 animate-pulse" />
                             </div>
-                            <div className="h-4 w-6 bg-gray-300 dark:bg-zinc-800 rounded" />
+                            <div className="h-4 w-4 rounded bg-gray-200 dark:bg-zinc-800 animate-pulse" />
                         </div>
                     </div>
                 ))}
@@ -57,7 +59,7 @@ export default function CardCourse() {
                 <Link
                     href={`/courses/${course.id}`}
                     key={course.id}
-                    className="dark:bg-[#171717] scale-110 hover:scale-105 transition-all bg-white border border-zinc-200 dark:border-0 rounded-2xl overflow-hidden p-3 flex flex-col gap-3 "
+                    className="dark:bg-abu-second scale-110 hover:scale-105 transition-all bg-white border border-zinc-200 dark:border-0 rounded-2xl overflow-hidden p-3 flex flex-col gap-3 "
                 >
                     <div className="relative w-full aspect-video rounded-xl overflow-hidden">
                         {/* Skeleton */}
@@ -74,52 +76,40 @@ export default function CardCourse() {
                             }`}
                             onLoadingComplete={() => setImageLoaded(true)}
                         />
+                        <div className="flex bg-black/60 text-xs py-0.5 px-2 rounded-full items-center gap-1 absolute bottom-1 right-4">
+                            <span className="text-white font-semibold">
+                                {Math.floor(
+                                    (course.totalDurationSeconds || 0) / 60,
+                                )}{' '}
+                                menit
+                            </span>
+                        </div>
                     </div>
 
                     <div className="space-y-2">
+                        <h3 className="text-sm font-semibold dark:text-white leading-tight line-clamp-2">
+                            {course.name}
+                        </h3>
+
                         <div className="flex items-center gap-1">
-                            <Icon icon={'lucide:play'} className="text-xs" />
-                            <span className="text-[10px] font-bold ">
-                                {course.durationSeconds || 0}s
+                            <Icon
+                                icon={'f7:square-stack'}
+                                className="text-md"
+                            />
+                            <span className="text-[10px] font-bold">
+                                {course.totalLessons} lesson
                             </span>
                             <Icon
                                 icon={'proicons:thumbs-up'}
-                                className="text-xs ml-1"
+                                className="text-md ml-1"
                             />
                             <span className="text-[10px] font-bold ">12k</span>
 
                             <Icon
                                 icon={'proicons:comment'}
-                                className="text-xs ml-1"
+                                className="text-md ml-1"
                             />
                             <span className="text-[10px] font-bold ">1200</span>
-                        </div>
-
-                        <h3 className="text-sm font-semibold dark:text-white leading-tight line-clamp-2">
-                            {course.name}
-                        </h3>
-
-                        <div className="flex items-center justify-between text-[10px] ">
-                            <div className="flex items-center gap-1">
-                                <Icon icon={'proicons:video'} width={15} />
-                                <span>
-                                    {Math.floor(course.durationSeconds || 0)} s
-                                </span>
-                            </div>
-                            <div className="flex items-center gap-1">
-                                <Icon icon={'proicons:calendar'} width={15} />
-                                <span>
-                                    {course.createdAt
-                                        ? new Date(
-                                              course.createdAt,
-                                          ).toLocaleDateString('id-ID', {
-                                              day: '2-digit',
-                                              month: 'short',
-                                              year: 'numeric',
-                                          })
-                                        : '-'}
-                                </span>
-                            </div>
                         </div>
                     </div>
 
@@ -132,9 +122,9 @@ export default function CardCourse() {
                                 {course.owner?.name}
                             </span>
                         </div>
-                        <span className="flex items-center gap-1 text-orange-500">
+                        {/* <span className="flex items-center gap-1 text-orange-500">
                             <Icon icon={'glyphs:coin-bold'} />
-                        </span>
+                        </span> */}
                     </div>
                 </Link>
             ))}

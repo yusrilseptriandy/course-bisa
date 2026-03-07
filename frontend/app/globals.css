@@ -13,6 +13,8 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-biru: #00b2ff;
+  --color-abu: #161717;
+  --color-abu-second: #1e1f21;
 }
 
 :root {

@@ -7,7 +7,7 @@ export default function TeacherDashboardLayout({
     children: React.ReactNode;
 }) {
     return (
-        <div className="min-h-screen bg-white dark:bg-black">
+        <div className="min-h-screen bg-white dark:bg-abu">
             <TeacherSidebar />
             <main className="md:pl-64 transition-all duration-300 ease-in-out">
                 <div className="mx-auto max-w-7xl">

@@ -9,11 +9,10 @@ import CourseTable from "../../../components/teacher/CourseTable";
 
 export default function CoursePage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  
-  const { ownerCourses, isLoading } = useCourseData("");
+  const { ownerCourses, isLoading } = useCourseData(undefined, false);
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
+    <div className="min-h-screen bg-white dark:bg-abu">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-10">
@@ -28,10 +27,10 @@ export default function CoursePage() {
 
           <button 
             onClick={() => setIsModalOpen(true)}
-            className="inline-flex items-center justify-center gap-2 bg-zinc-900 dark:bg-white text-white dark:text-black px-6 py-2.5 rounded-full hover:opacity-90 active:scale-95 transition-all shadow-sm"
+            className="inline-flex items-center justify-center gap-2 bg-black text-white dark:bg-white dark:text-black px-6 py-2.5 rounded-full hover:opacity-90 active:scale-95 transition-all"
           >
             <Icon icon="lucide:plus" width={20} />
-            <span className="text-sm font-semibold tracking-tight">Materi Baru</span>
+            <span className="text-sm tracking-tight font-medium">Materi Baru</span>
           </button>
         </div>
 

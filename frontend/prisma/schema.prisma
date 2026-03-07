@@ -19,6 +19,13 @@ enum Role {
   student
 }
 
+enum SubscriptionType {
+  DAILY
+  WEEKLY
+  MONTHLY
+  LIFETIME
+}
+
 enum PaymentStatus {
   PENDING
   PAID
@@ -137,24 +144,20 @@ model Course {
   name            String
   desc            String?
   thumbnail       String?
-  price           Int?
-  durationSeconds Int?      @default(0)
   categoryId      String?
   category        Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
-  isPublish       Boolean? @default(false)
-  courseStatus    CourseStatus @default(DRAFT)
 
   ownerId String
   owner   User   @relation(fields: [ownerId], references: [id], onDelete: Restrict)
 
-  muxAssetId    String?     @unique
-  muxPlaybackId String?     @unique
-  muxUploadId   String?
-  videoStatus   VideoStatus @default(PROCESSING)
+  isPublish    Boolean      @default(false)
+  courseStatus CourseStatus @default(DRAFT)
 
-  comments    Comment[]
-  likes       Like[]
-  purchases   Purchase[]
+  lessons   Lesson[]
+  plans     SubscriptionPlan[]
+  purchases Purchase[]
+  comments  Comment[]
+  likes     Like[]
   attachments Attachment[]
 
   isDeleted Boolean   @default(false)
@@ -165,6 +168,51 @@ model Course {
 
   @@index([ownerId])
   @@index([isDeleted])
+}
+
+model Lesson {
+  id String @id @default(uuid())
+
+  title       String
+  description String?
+  order       Int
+
+  durationSeconds Int? @default(0)
+
+  isFree Boolean @default(false)
+
+  muxAssetId    String?     @unique
+  muxPlaybackId String?     @unique
+  videoStatus   VideoStatus @default(PROCESSING)
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([courseId])
+  @@unique([courseId, order])
+}
+
+model SubscriptionPlan {
+  id String @id @default(uuid())
+
+  courseId String
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  type SubscriptionType
+  price Int
+  durationDays Int?
+
+  isActive Boolean @default(true)
+
+  purchases Purchase[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([courseId, type])
+  @@index([courseId])
 }
 
 model Comment {
@@ -209,27 +257,34 @@ model Purchase {
   id String @id @default(uuid())
 
   userId String
-  user   User   @relation(fields: [userId], references: [id], onDelete: Restrict)
+  user   User @relation(fields: [userId], references: [id], onDelete: Restrict)
 
   courseId String
   course   Course @relation(fields: [courseId], references: [id], onDelete: Restrict)
+
+  planId String
+  plan   SubscriptionPlan @relation(fields: [planId], references: [id], onDelete: Restrict)
+
+  subscriptionType SubscriptionType
 
   amount   Int
   currency String @default("IDR")
 
   status PaymentStatus @default(PENDING)
 
-  externalId String?   @unique
+  startDate DateTime?
+  endDate   DateTime?
+
+  externalId String? @unique
   paymentUrl String?
   paidAt     DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([userId, courseId])
-  @@index([status])
-  @@index([courseId])
   @@index([userId])
+  @@index([courseId])
+  @@index([status])
 }
 
 model Attachment {

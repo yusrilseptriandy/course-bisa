@@ -71,14 +71,14 @@ export function ConfirmModal({
                             <button
                                 onClick={onClose}
                                 disabled={isLoading}
-                                className="cursor-pointer hover:scale-105 flex-1 rounded-full dark:border-zinc-800 py-3.5 bg-white dark:bg-zinc-800 text-[15px] font-medium hover:bg-zinc-100 active:bg-zinc-200 disabled:opacity-50  dark:hover:bg-zinc-800"
+                                className="cursor-pointer hover:scale-95 flex-1 rounded-full dark:border-zinc-800 py-3.5 bg-white dark:bg-zinc-800 text-[15px] font-medium hover:bg-zinc-100 active:bg-zinc-200 disabled:opacity-50  dark:hover:bg-zinc-800"
                             >
                                 Batal
                             </button>
                             <button
                                 onClick={onConfirm}
                                 disabled={isLoading}
-                                className="cursor-pointer hover:scale-105 flex-1 rounded-full dark:border-zinc-800 bg-red-100 dark:bg-red-900/20 py-3.5 text-[15px] font-bold text-red-600 hover:bg-red-50 active:bg-red-100 disabled:opacity-50 dark:text-red-500 dark:hover:bg-red-900/20"
+                                className="cursor-pointer hover:scale-95 flex-1 rounded-full dark:border-zinc-800 bg-red-100 dark:bg-red-900/20 py-3.5 text-[15px] font-bold text-red-600 hover:bg-red-50 active:bg-red-100 disabled:opacity-50 dark:text-red-500 dark:hover:bg-red-900/20"
                             >
                                 {isLoading ? (
                                     <div className="flex items-center justify-center gap-2">

@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { email, z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { authClient } from '@/app/libs/auth-client';
+import toast from 'react-hot-toast';
 interface LoginModalProps {
     isOpen: boolean;
     onClose: () => void;
@@ -313,15 +314,15 @@ export function LoginModal({ isOpen, onClose }: LoginModalProps) {
                                     whileTap={{ scale: 0.95 }}
                                     disabled={isLoading}
                                     className={`
-                                        w-full h-12 rounded-full font-semibold 
+                                        w-full h-12 rounded-full 
                                         flex items-center justify-center
-                                        transition-all duration-300 text-sm
+                                        transition-all duration-300 font-semibold text-sm
                                         ${
                                             isLoading
                                                 ? 'bg-black/60 dark:bg-zinc-50/60 cursor-not-allowed opacity-70'
-                                                : 'bg-black dark:bg-zinc-50 hover:opacity-90'
+                                                : 'bg-black dark:bg-white dark:text-black'
                                         }
-                                        text-white dark:text-black
+                                        text-white 
                                     `}
                                 >
                                     {isLoading ? (

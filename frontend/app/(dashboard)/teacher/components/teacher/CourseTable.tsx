@@ -10,9 +10,16 @@ interface CourseTableProps {
     isLoading: boolean;
 }
 
+function getPriceDisplay(course: Course): string {
+    const activePlans = course.plans?.filter((p) => p.isActive) ?? [];
+    if (activePlans.length === 0) return 'Gratis';
+    const lowestPrice = Math.min(...activePlans.map((p) => p.price));
+    return `Mulai Rp ${lowestPrice.toLocaleString('id-ID')}`;
+}
+
 export default function CourseTable({ courses, isLoading }: CourseTableProps) {
-    const safeCourses = Array.isArray(courses) 
-        ? courses.filter(course => !course.isDeleted) 
+    const safeCourses = Array.isArray(courses)
+        ? courses.filter((course) => !course.isDeleted)
         : [];
 
     if (isLoading) {
@@ -37,18 +44,10 @@ export default function CourseTable({ courses, isLoading }: CourseTableProps) {
                 <table className="w-full text-left text-sm">
                     <thead className="border-b border-zinc-200 bg-zinc-50/50 text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/50">
                         <tr>
-                            <th className="px-6 py-4 font-medium">
-                                Judul Kursus
-                            </th>
-                            <th className="px-6 py-4 font-medium text-center">
-                                Harga
-                            </th>
-                            <th className="px-6 py-4 font-medium text-center">
-                                Status
-                            </th>
-                            <th className="px-6 py-4 font-medium text-right">
-                                Aksi
-                            </th>
+                            <th className="px-6 py-4 font-medium">Judul Kursus</th>
+                            <th className="px-6 py-4 font-medium text-center">Harga</th>
+                            <th className="px-6 py-4 font-medium text-center">Status</th>
+                            <th className="px-6 py-4 font-medium text-right">Aksi</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-zinc-200 dark:divide-zinc-800">
@@ -57,6 +56,7 @@ export default function CourseTable({ courses, isLoading }: CourseTableProps) {
                                 key={course.id}
                                 className="group hover:bg-zinc-50 transition-colors dark:hover:bg-zinc-900/50"
                             >
+                                {/* Judul */}
                                 <td className="px-6 py-4">
                                     <div className="flex items-center gap-3">
                                         <div className="h-10 w-10 shrink-0 rounded-lg bg-zinc-100 dark:bg-zinc-800 overflow-hidden border border-zinc-200 dark:border-zinc-700 relative">
@@ -69,10 +69,7 @@ export default function CourseTable({ courses, isLoading }: CourseTableProps) {
                                                 />
                                             ) : (
                                                 <div className="flex h-full w-full items-center justify-center">
-                                                    <Icon
-                                                        icon="lucide:image"
-                                                        className="text-zinc-400"
-                                                    />
+                                                    <Icon icon="lucide:image" className="text-zinc-400" />
                                                 </div>
                                             )}
                                         </div>
@@ -81,23 +78,23 @@ export default function CourseTable({ courses, isLoading }: CourseTableProps) {
                                         </span>
                                     </div>
                                 </td>
-                                <td className="px-6 py-4 text-center text-zinc-600 dark:text-orange-500 font-semibold">
-                                    {course.price === 0 || !course.price
-                                        ? 'Gratis'
-                                        : `Rp ${(course.price || 0).toLocaleString('id-ID')}`}
-                                    </td>
+
+                                {/* Harga — dari plans */}
+                                <td className="px-6 py-4 text-center font-semibold text-orange-400">
+                                    {getPriceDisplay(course)}
+                                </td>
+
+                                {/* Status */}
                                 <td className="px-6 py-4 text-center">
                                     <div className="flex items-center justify-center gap-1.5 group/status relative">
                                         <span
                                             className={`inline-flex items-center px-2 py-1 text-xs font-medium rounded-full ${
                                                 course.isPublish
                                                     ? 'text-emerald-700 dark:text-emerald-400'
-                                                    : ' text-amber-700  dark:text-amber-400'
+                                                    : 'text-amber-700 dark:text-amber-400'
                                             }`}
                                         >
-                                            {course.isPublish
-                                                ? 'Published'
-                                                : 'Draft'}
+                                            {course.isPublish ? 'Published' : 'Draft'}
                                         </span>
 
                                         {!course.isPublish && (
@@ -107,23 +104,20 @@ export default function CourseTable({ courses, isLoading }: CourseTableProps) {
                                                     width={14}
                                                     className="text-amber-500 opacity-60 hover:opacity-100 transition-opacity"
                                                 />
-
                                                 <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-48 p-2 bg-zinc-900 text-white text-[10px] rounded-lg opacity-0 invisible group-hover/status:opacity-100 group-hover/status:visible transition-all z-10 shadow-xl pointer-events-none">
                                                     <p className="leading-tight">
-                                                        Status draf hanya
-                                                        disimpan sementara di
-                                                        Redis dan akan terhapus
-                                                        otomatis dalam 24 jam
-                                                        jika tidak segera
-                                                        dipublikasikan.
+                                                        Status draf hanya disimpan sementara di Redis
+                                                        dan akan terhapus otomatis dalam 24 jam jika
+                                                        tidak segera dipublikasikan.
                                                     </p>
-
                                                     <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-zinc-900" />
                                                 </div>
                                             </div>
                                         )}
                                     </div>
                                 </td>
+
+                                {/* Aksi */}
                                 <td className="px-6 py-4 text-right">
                                     <Link
                                         href={`/teacher/dashboard/course/${course.id}`}

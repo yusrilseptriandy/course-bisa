@@ -29,11 +29,11 @@ const googleFont = Young_Serif({
 const MENU_ITEMS = [
     {
         label: 'Dashboard',
-        icon: 'mage:dashboard-fill',
+        icon: 'lucide:layout-dashboard',
         href: '/teacher/dashboard/course',
     },
-    { label: 'Profile Saya', icon: 'mage:user-square-fill', href: '/profile' },
-    { label: 'Kelas Saya', icon: 'mage:book-fill', href: '/kelas' },
+    { label: 'Profile Saya', icon: 'lucide:user', href: '/profile' },
+    { label: 'Kelas Saya', icon: 'lucide:book-open', href: '/kelas' },
 ];
 
 const SG = Geist();
@@ -76,17 +76,6 @@ export default function Navbar() {
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, []);
-    //     try {
-    //         setIsLoading(true);
-    //         setTimeout(async () => {
-    //             await authClient.signOut();
-    //             setIsMobileMenuOpen(false);
-    //             setIsDesktopMenuOpen(false);
-    //         }, 500);
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // };
 
     const openLogoutModal = () => {
         setIsMobileMenuOpen(false);
@@ -106,6 +95,9 @@ export default function Navbar() {
             console.error(err);
         } finally {
             setIsLoading(false);
+            setTimeout(() => {
+               window.location.reload()
+            }, 1000);
         }
     };
     if (!mounted) return <div className="w-10 h-10 rounded-full animate-pulse bg-zinc-100" />;
@@ -124,7 +116,7 @@ export default function Navbar() {
                 isLoading={isLoading}
             />
 
-            <nav className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-md dark:bg-black/80 dark:border-zinc-800">
+            <nav className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur-md dark:bg-abu/80 dark:border-zinc-800 border-b border-zinc-200">
                 <div className="flex h-16 items-center justify-between px-4 md:px-6 gap-4">
                     <Link href={'/'} className="flex items-center shrink-0">
                         <Icon icon={"wordpress:loop"} width={64} className='text-orange-500'/>
@@ -204,12 +196,12 @@ export default function Navbar() {
                                     >
                                         <div className="bg-white dark:bg-zinc-600 rounded-full p-1 shadow-sm">
                                             <Icon
-                                                icon="tabler:user"
+                                                icon="lucide:user"
                                                 width={18}
                                                 className="text-zinc-700 dark:text-zinc-200"
                                             />
                                         </div>
-                                        <p className={`text-nowrap font-semibold text-sm text-zinc-700 dark:text-zinc-200 max-25 truncate ${googleFont.className}`}>
+                                        <p className={`text-nowrap font-semibold text-sm text-zinc-700 dark:text-zinc-200 max-25 truncate`}>
                                             {session.user.name}
                                         </p>
                                         <Icon
@@ -284,7 +276,7 @@ export default function Navbar() {
                                                                         item.icon
                                                                     }
                                                                     className="dark:text-white"
-                                                                    width={20}
+                                                                    width={21}
                                                                 />
                                                                 {item.label}
                                                             </Link>
